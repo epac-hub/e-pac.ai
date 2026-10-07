@@ -1,0 +1,55 @@
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { useEffect } from "react";
+import { Redirect, Route, Switch } from "wouter";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { PageTransitionProvider } from "./components/PageTransition";
+import GlobalSoundtrack from "./components/GlobalSoundtrack";
+import GlobalStarfield from "./components/GlobalStarfield";
+import GlobalCursor from "./components/GlobalCursor";
+import Home from "./pages/Home";
+import About from "./pages/About";
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="/work"><Redirect to="/" replace /></Route>
+      <Route path="/case-study/:slug"><Redirect to="/" replace /></Route>
+      <Route component={Home} />
+    </Switch>
+  );
+}
+
+function App() {
+  useEffect(() => {
+    try {
+      localStorage.removeItem("galactic-achievements");
+      localStorage.removeItem("galactic-visited");
+      localStorage.removeItem("paint-stroke-config");
+      localStorage.removeItem("theme");
+    } catch {
+      // Storage may be unavailable in private browsing.
+    }
+  }, []);
+
+  return (
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="dark">
+        <TooltipProvider>
+          <PageTransitionProvider>
+            <Toaster />
+            <GlobalSoundtrack />
+            <GlobalStarfield />
+            <GlobalCursor />
+            <Router />
+          </PageTransitionProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
+  );
+}
+
+export default App;
