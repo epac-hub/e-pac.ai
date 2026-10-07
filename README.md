@@ -5,10 +5,10 @@ ePAC, LLC — e-pac.ai
 
 | Ruta | Contenido |
 |---|---|
-| `index.html`, `404.html`, `assets/`, `manus-storage/`, `og-image.png` | Sitio principal: compilación publicada de la experiencia galáctica creada en Manus. |
+| `index.html`, `404.html`, `assets/`, `manus-storage/`, `og-image.png` | Sitio principal: copia de la compilación publicada en Manus (`galacticweb-g4c3g6qm.manus.space`, paquete `index-unmr3uUx.js`). |
 | `landing/` | Landing original de ePAC, LLC. |
-| `experience/` | Compilación anterior de la experiencia interactiva. |
-| `galactic-demo/` | Código fuente React/TypeScript de un checkpoint anterior de Manus (`69dc9e65`). Es más antiguo que el sitio publicado. |
+| `experience/` | Compilación de la experiencia interactiva generada desde `galactic-demo/`, con base `/e-pac.ai/experience/`. |
+| `galactic-demo/` | Código fuente React/TypeScript de la experiencia (ver `PRODUCTION_WORKFLOW.md`). |
 
 `404.html` es una copia de `index.html` para que GitHub Pages sirva las rutas internas (`/about`, `/work`, `/case-study/...`).
 
