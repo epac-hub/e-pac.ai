@@ -10,25 +10,36 @@ export default function AutoStoryScroll() {
     let active = true;
     let lastTime = performance.now();
     let speed = 0;
+    let pausedUntil = 0;
 
     const stop = () => {
       active = false;
       cancelAnimationFrame(frame);
     };
 
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", " ", "Home", "End", "Tab"].includes(event.key)) stop();
+    const pauseForInteraction = () => {
+      pausedUntil = performance.now() + 3000;
+      speed = 0;
     };
 
-    window.addEventListener("wheel", stop, { passive: true });
-    window.addEventListener("touchstart", stop, { passive: true });
-    window.addEventListener("pointerdown", stop, { passive: true });
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", " ", "Home", "End", "Tab"].includes(event.key)) pauseForInteraction();
+    };
+
+    window.addEventListener("wheel", pauseForInteraction, { passive: true });
+    window.addEventListener("touchstart", pauseForInteraction, { passive: true });
+    window.addEventListener("pointerdown", pauseForInteraction, { passive: true });
     window.addEventListener("keydown", onKeyDown);
 
     const tick = (now: number) => {
       if (!active) return;
       const elapsed = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
+
+      if (now < pausedUntil) {
+        frame = requestAnimationFrame(tick);
+        return;
+      }
 
       if (document.visibilityState === "visible") {
         const section = document.getElementById("text-reveal");
@@ -38,11 +49,15 @@ export default function AutoStoryScroll() {
         const parallaxBottom = parallax
           ? window.scrollY + parallax.getBoundingClientRect().bottom
           : storyBottom;
+        const horizontal = document.getElementById("horizontal");
+        const horizontalBottom = horizontal
+          ? window.scrollY + (horizontal.parentElement ?? horizontal).getBoundingClientRect().bottom
+          : parallaxBottom;
         const position = window.scrollY;
 
-        // Give the words their longest reading interval; move more briskly
-        // through visual sections without jumping to the next anchor.
-        const targetSpeed = position < storyTop ? 175 : position < storyBottom ? 75 : position < parallaxBottom ? 105 : 145;
+        // Keep the story slow, but traverse the long pinned horizontal track
+        // continuously so it does not appear to freeze or skip its panels.
+        const targetSpeed = position < storyTop ? 175 : position < storyBottom ? 75 : position < parallaxBottom ? 105 : position < horizontalBottom ? 320 : 145;
         speed += (targetSpeed - speed) * Math.min(1, elapsed * 2);
 
         const end = document.documentElement.scrollHeight - window.innerHeight;
@@ -58,9 +73,9 @@ export default function AutoStoryScroll() {
     frame = requestAnimationFrame(tick);
     return () => {
       stop();
-      window.removeEventListener("wheel", stop);
-      window.removeEventListener("touchstart", stop);
-      window.removeEventListener("pointerdown", stop);
+      window.removeEventListener("wheel", pauseForInteraction);
+      window.removeEventListener("touchstart", pauseForInteraction);
+      window.removeEventListener("pointerdown", pauseForInteraction);
       window.removeEventListener("keydown", onKeyDown);
     };
   }, []);

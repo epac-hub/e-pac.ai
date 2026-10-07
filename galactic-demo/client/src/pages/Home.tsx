@@ -8,6 +8,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useTheme } from "@/contexts/ThemeContext";
 import AutoStoryScroll from "@/components/AutoStoryScroll";
+import { mediaPath } from "@/lib/media";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -70,9 +71,9 @@ function SoundProvider({ children }: { children: React.ReactNode }) {
   const clickAudioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    hoverAudioRef.current = new Audio("/manus-storage/sfx-hover_8a26f67f.mp3");
+    hoverAudioRef.current = new Audio(mediaPath("sfx-hover_8a26f67f.mp3"));
     hoverAudioRef.current.volume = 0.15;
-    clickAudioRef.current = new Audio("/manus-storage/sfx-click_d6f1c566.mp3");
+    clickAudioRef.current = new Audio(mediaPath("sfx-click_d6f1c566.mp3"));
     clickAudioRef.current.volume = 0.25;
   }, []);
 
@@ -1511,7 +1512,7 @@ function ParallaxSection() {
         <div
           className="parallax-bg absolute inset-0 scale-125 opacity-30"
           style={{
-            backgroundImage: "url(/manus-storage/galactic-about-bg_a3e8817b.png)",
+            backgroundImage: `url(${mediaPath("galactic-about-bg_a3e8817b.png")})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

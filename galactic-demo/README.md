@@ -1,8 +1,6 @@
 # ePAC, LLC — experiencia interactiva
 
-Código fuente de la experiencia React/TypeScript con GSAP, Three.js, Lenis y un relato que comienza automáticamente. Sincronizado desde el proyecto Manus `galactic-demo`, checkpoint `34fdce0c`.
-
-## Desarrollo
+Código fuente del sitio React/TypeScript, sincronizado desde el checkpoint Manus `69dc9e65`.
 
 ```bash
 pnpm install
@@ -10,6 +8,6 @@ pnpm run check
 pnpm run dev
 ```
 
-La entrada de desarrollo está en `client/`; las páginas visibles son Home y About. Los archivos de audio e imagen referenciados mediante `/manus-storage/` proceden del almacenamiento del proyecto Manus. **El código en GitHub, por sí solo, no publica ni incorpora esos archivos multimedia** en GitHub Pages.
+La landing original del repositorio permanece en el `index.html` de la raíz. El código fuente nuevo está aquí; una compilación estática independiente, con los medios usados por la página, se encuentra en [`../experience/`](../experience/).
 
-Este directorio se agregó sin reemplazar el `index.html` de la raíz. Para servir esta experiencia fuera de Manus se necesita empaquetar el build y alojar los recursos multimedia correspondientes con rutas propias.
+La copia de GitHub Pages se compila con base `/e-pac.ai/experience/`, usa rutas hash para navegar a About y se publica en la carpeta `experience/`. La versión Manus continúa utilizando su propia base `/`.

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { mediaPath } from "@/lib/media";
 
 /** Keep the landing-page soundtrack alive across route changes, without a UI control. */
 export default function GlobalSoundtrack() {
@@ -59,8 +60,8 @@ export default function GlobalSoundtrack() {
 
   return (
     <>
-      <audio ref={musicRef} src="/manus-storage/galactic-bg-music_6aec7333.mp3" loop autoPlay preload="auto" crossOrigin="anonymous" />
-      <audio ref={ambienceRef} src="/manus-storage/ambient-space_659e307d.mp3" loop autoPlay preload="auto" crossOrigin="anonymous" />
+      <audio ref={musicRef} src={mediaPath("galactic-bg-music_6aec7333.mp3")} loop autoPlay preload="auto" crossOrigin="anonymous" />
+      <audio ref={ambienceRef} src={mediaPath("ambient-space_659e307d.mp3")} loop autoPlay preload="auto" crossOrigin="anonymous" />
     </>
   );
 }

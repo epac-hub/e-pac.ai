@@ -1,7 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect } from "react";
-import { Redirect, Route, Switch } from "wouter";
+import { Redirect, Route, Router as WouterRouter, Switch } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { PageTransitionProvider } from "./components/PageTransition";
@@ -11,7 +12,7 @@ import GlobalCursor from "./components/GlobalCursor";
 import Home from "./pages/Home";
 import About from "./pages/About";
 
-function Router() {
+function AppRoutes() {
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -39,13 +40,25 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
-          <PageTransitionProvider>
-            <Toaster />
-            <GlobalSoundtrack />
-            <GlobalStarfield />
-            <GlobalCursor />
-            <Router />
-          </PageTransitionProvider>
+          {import.meta.env.BASE_URL === "/" ? (
+            <PageTransitionProvider>
+              <Toaster />
+              <GlobalSoundtrack />
+              <GlobalStarfield />
+              <GlobalCursor />
+              <AppRoutes />
+            </PageTransitionProvider>
+          ) : (
+            <WouterRouter hook={useHashLocation}>
+              <PageTransitionProvider>
+                <Toaster />
+                <GlobalSoundtrack />
+                <GlobalStarfield />
+                <GlobalCursor />
+                <AppRoutes />
+              </PageTransitionProvider>
+            </WouterRouter>
+          )}
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
