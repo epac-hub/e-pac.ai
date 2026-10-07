@@ -1334,6 +1334,12 @@ function HeroSection() {
       .from(".hero-line-2", { y: 120, opacity: 0 }, 0.5)
       .from(".hero-subtitle", { y: 40, opacity: 0, duration: 1 }, 0.8)
       .from(".hero-scroll-indicator", { opacity: 0, y: -20 }, 1.2);
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.to(".hero-cinema", {
+        yPercent: 18, scale: 1.08, ease: "none",
+        scrollTrigger: { trigger: sectionRef.current, start: "top top", end: "bottom top", scrub: 1 },
+      });
+    }
   }, { scope: sectionRef });
 
   return (
@@ -1342,6 +1348,30 @@ function HeroSection() {
       id="hero"
       className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
+      <div className="hero-cinema absolute inset-0 pointer-events-none" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 767px)" srcSet={mediaPath("hero-mobile-poster_061ff7a1.jpg")} />
+          <img
+            src={mediaPath("hero-poster_c4087cb3.jpg")}
+            alt=""
+            fetchPriority="high"
+            className="absolute inset-0 w-full h-full object-cover opacity-65 md:opacity-80"
+          />
+        </picture>
+        <video
+          aria-hidden="true"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={mediaPath("hero-poster_c4087cb3.jpg")}
+          className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-65 motion-reduce:hidden"
+        >
+          <source src={mediaPath("seedance-web_15a96ec9.mp4")} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0015]/25 via-[#0a0015]/10 to-[#0a0015]/60" />
+      </div>
       {/* Content */}
       <div className="hero-copy relative z-10 text-center px-4">
         <div className="overflow-hidden mb-2">
@@ -1397,7 +1427,7 @@ function TextRevealSection() {
     const laterWords = paragraphs.slice(1).flatMap((p) =>
       Array.from(p.querySelectorAll<HTMLElement>(".story-word"))
     );
-    gsap.set(laterWords, { opacity: 0.36, y: 5 });
+    gsap.set(laterWords, { opacity: 0.58, y: 5 });
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       gsap.set(laterWords, { opacity: 1, y: 0 });
@@ -1436,9 +1466,21 @@ function TextRevealSection() {
       style={{ minHeight: "300vh" }}
     >
       {/* Sticky container that stays in viewport while scrolling reveals words */}
-      <div className="sticky top-0 h-screen flex flex-col items-center justify-center">
-        <span className="text-[#8b5cf6] text-xs uppercase tracking-[0.4em] mb-8 block">Our Philosophy</span>
-        <div ref={paragraphRef} className="max-w-4xl text-center px-4">
+      <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
+        <video
+          aria-hidden="true"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+          className="story-cinema hidden md:block absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none motion-reduce:hidden"
+        >
+          <source src={mediaPath("higgsfield-web_9f6a141d.mp4")} type="video/mp4" />
+        </video>
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#0a0015]/50 via-[#0a0015]/25 to-[#0a0015]/50" />
+        <span className="relative z-10 text-[#a78bfa] text-xs uppercase tracking-[0.4em] mb-8 block">Our Philosophy</span>
+        <div ref={paragraphRef} className="relative z-10 max-w-4xl text-center px-4">
           {story.map((sentence, pIdx) => (
             <p key={pIdx} className="mb-6 leading-relaxed">
               {sentence.split(" ").map((word, wIdx) => (
@@ -1454,7 +1496,7 @@ function TextRevealSection() {
           ))}
         </div>
         {/* Scroll indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+        <div className="absolute z-10 bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
           <span className="text-[10px] uppercase tracking-[0.3em] text-white/50">Scroll to read</span>
           <div className="w-px h-8 bg-gradient-to-b from-white/40 to-transparent animate-pulse" />
         </div>
