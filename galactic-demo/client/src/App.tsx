@@ -9,6 +9,7 @@ import { PageTransitionProvider } from "./components/PageTransition";
 import GlobalSoundtrack from "./components/GlobalSoundtrack";
 import GlobalStarfield from "./components/GlobalStarfield";
 import GlobalCursor from "./components/GlobalCursor";
+import ThemeSwitch from "./components/ThemeSwitch";
 import Home from "./pages/Home";
 import About from "./pages/About";
 
@@ -30,7 +31,6 @@ function App() {
       localStorage.removeItem("galactic-achievements");
       localStorage.removeItem("galactic-visited");
       localStorage.removeItem("paint-stroke-config");
-      localStorage.removeItem("theme");
     } catch {
       // Storage may be unavailable in private browsing.
     }
@@ -38,7 +38,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark">
+      <ThemeProvider defaultTheme="dark" switchable>
         <TooltipProvider>
           {import.meta.env.BASE_URL === "/" ? (
             <PageTransitionProvider>
@@ -46,6 +46,7 @@ function App() {
               <GlobalSoundtrack />
               <GlobalStarfield />
               <GlobalCursor />
+              <ThemeSwitch />
               <AppRoutes />
             </PageTransitionProvider>
           ) : (
@@ -55,6 +56,7 @@ function App() {
                 <GlobalSoundtrack />
                 <GlobalStarfield />
                 <GlobalCursor />
+                <ThemeSwitch />
                 <AppRoutes />
               </PageTransitionProvider>
             </WouterRouter>

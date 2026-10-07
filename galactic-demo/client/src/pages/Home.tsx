@@ -8,6 +8,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useTheme } from "@/contexts/ThemeContext";
 import AutoStoryScroll from "@/components/AutoStoryScroll";
+import CinematicReadyGate from "@/components/CinematicReadyGate";
 import { mediaPath } from "@/lib/media";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -1326,6 +1327,7 @@ function GlitchText({ children, className = "" }: { children: string; className?
 // ============================================================
 function HeroSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1.2 } });
@@ -1334,6 +1336,12 @@ function HeroSection() {
       .from(".hero-line-2", { y: 120, opacity: 0 }, 0.5)
       .from(".hero-subtitle", { y: 40, opacity: 0, duration: 1 }, 0.8)
       .from(".hero-scroll-indicator", { opacity: 0, y: -20 }, 1.2);
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.to(".hero-cinema", {
+        yPercent: 18, scale: 1.08, ease: "none",
+        scrollTrigger: { trigger: sectionRef.current, start: "top top", end: "bottom top", scrub: 1 },
+      });
+    }
   }, { scope: sectionRef });
 
   return (
@@ -1342,30 +1350,54 @@ function HeroSection() {
       id="hero"
       className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
+      <div className="hero-cinema absolute inset-0 pointer-events-none" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 767px)" srcSet={mediaPath(theme === "light" ? "hero-light-mobile_65a949e3.jpg" : "hero-mobile-poster_061ff7a1.jpg")} />
+          <img
+            src={mediaPath(theme === "light" ? "hero-light-desktop_5b852539.jpg" : "hero-poster_c4087cb3.jpg")}
+            alt=""
+            fetchPriority="high"
+            className="absolute inset-0 w-full h-full object-cover opacity-80"
+          />
+        </picture>
+        <video
+          aria-hidden="true"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={mediaPath("hero-poster_c4087cb3.jpg")}
+          className="hidden md:dark:block absolute inset-0 w-full h-full object-cover opacity-65 motion-reduce:hidden"
+        >
+          <source src={mediaPath("seedance-web_15a96ec9.mp4")} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0015]/25 via-[#0a0015]/10 to-[#0a0015]/60 dark:block hidden" />
+      </div>
       {/* Content */}
       <div className="hero-copy relative z-10 text-center px-4">
-        <div className="overflow-hidden mb-2">
+        <div className="overflow-hidden mb-2 px-3 -mx-3">
           <GlitchText
             className="hero-line-1 text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter text-white leading-[0.9]"
           >
             BEYOND THE
           </GlitchText>
         </div>
-        <div className="overflow-hidden">
+        <div className="overflow-hidden px-3 -mx-3">
           <GlitchText
-            className="hero-line-2 text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter text-[#8b5cf6] leading-[0.9]"
+            className="hero-line-2 text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter text-[#a78bfa] leading-[0.9]"
           >
             VISIBLE
           </GlitchText>
         </div>
-        <p className="hero-subtitle text-lg md:text-xl text-white/50 mt-8 max-w-xl mx-auto tracking-wide">
+        <p className="hero-subtitle text-lg md:text-xl text-white/75 mt-8 max-w-xl mx-auto tracking-wide">
           A showcase of award-winning web design techniques. GSAP animations, 3D WebGL, scroll-driven storytelling, and immersive interactions.
         </p>
       </div>
 
       {/* Scroll indicator */}
       <div className="hero-scroll-indicator absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <span className="text-white/30 text-xs uppercase tracking-[0.3em]">Scroll</span>
+        <span className="text-white/65 text-xs uppercase tracking-[0.3em]">Scroll</span>
         <div className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent" />
       </div>
     </section>
@@ -1397,7 +1429,7 @@ function TextRevealSection() {
     const laterWords = paragraphs.slice(1).flatMap((p) =>
       Array.from(p.querySelectorAll<HTMLElement>(".story-word"))
     );
-    gsap.set(laterWords, { opacity: 0.36, y: 5 });
+    gsap.set(laterWords, { opacity: 0.58, y: 5 });
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       gsap.set(laterWords, { opacity: 1, y: 0 });
@@ -1436,9 +1468,21 @@ function TextRevealSection() {
       style={{ minHeight: "300vh" }}
     >
       {/* Sticky container that stays in viewport while scrolling reveals words */}
-      <div className="sticky top-0 h-screen flex flex-col items-center justify-center">
-        <span className="text-[#8b5cf6] text-xs uppercase tracking-[0.4em] mb-8 block">Our Philosophy</span>
-        <div ref={paragraphRef} className="max-w-4xl text-center px-4">
+      <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
+        <video
+          aria-hidden="true"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+          className="story-cinema hidden md:dark:block absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none motion-reduce:hidden"
+        >
+          <source src={mediaPath("higgsfield-web_9f6a141d.mp4")} type="video/mp4" />
+        </video>
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#0a0015]/50 via-[#0a0015]/25 to-[#0a0015]/50 dark:block hidden" />
+        <span className="relative z-10 text-[#a78bfa] text-xs uppercase tracking-[0.4em] mb-8 block">Our Philosophy</span>
+        <div ref={paragraphRef} className="relative z-10 max-w-4xl text-center px-4">
           {story.map((sentence, pIdx) => (
             <p key={pIdx} className="mb-6 leading-relaxed">
               {sentence.split(" ").map((word, wIdx) => (
@@ -1454,7 +1498,7 @@ function TextRevealSection() {
           ))}
         </div>
         {/* Scroll indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+        <div className="absolute z-10 bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
           <span className="text-[10px] uppercase tracking-[0.3em] text-white/50">Scroll to read</span>
           <div className="w-px h-8 bg-gradient-to-b from-white/40 to-transparent animate-pulse" />
         </div>
@@ -1696,6 +1740,23 @@ function CardsSection() {
               TECHNIQUES <span className="text-[#8b5cf6]">DEMONSTRATED</span>
             </h2>
           </MagneticText>
+
+          <div className="media-workflow mb-16" aria-label="Cinematic production workflow">
+            <p className="text-center text-[10px] uppercase tracking-[0.3em] text-[#a78bfa] mb-6">Behind the experience</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { name: "Seedance", role: "Cinematic hero motion", stage: "seedance" },
+                { name: "Higgsfield", role: "Narrative motion", stage: "higgsfield" },
+                { name: "Google AI Studio", role: "Visual review in production", stage: "ai-studio" },
+              ].map((tool) => (
+                <article key={tool.stage} data-media-stage={tool.stage} className="media-workflow-card relative overflow-hidden rounded-xl px-6 py-5">
+                  <span className="relative z-10 block text-[10px] uppercase tracking-[0.22em] opacity-65">Creative process</span>
+                  <h3 className="relative z-10 mt-2 text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>{tool.name}</h3>
+                  <p className="relative z-10 mt-1 text-sm opacity-75">{tool.role}</p>
+                </article>
+              ))}
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cards.map((card, i) => (
@@ -2063,6 +2124,8 @@ function Footer() {
 // MAIN HOME PAGE
 // ============================================================
 export default function Home() {
+  const [sceneReady, setSceneReady] = useState(false);
+  const onSceneReady = useCallback(() => setSceneReady(true), []);
   // Initialize Lenis smooth scroll
   useEffect(() => {
     const lenis = new Lenis({
@@ -2072,10 +2135,13 @@ export default function Home() {
     });
 
     lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    const updateLenis = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      gsap.ticker.remove(updateLenis);
+      lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
     };
   }, []);
@@ -2083,7 +2149,7 @@ export default function Home() {
   return (
     <PerformanceProvider>
       <SoundProvider>
-        <HomeContent />
+        <HomeContent sceneReady={sceneReady} onSceneReady={onSceneReady} />
       </SoundProvider>
     </PerformanceProvider>
   );
@@ -2214,7 +2280,7 @@ function ScrollProgressBar() {
   );
 }
 
-function HomeContent() {
+function HomeContent({ sceneReady, onSceneReady }: { sceneReady: boolean; onSceneReady: () => void }) {
   const { isLowEnd } = usePerformanceMode();
 
   return (
@@ -2238,7 +2304,8 @@ function HomeContent() {
         <ContactSection />
         <Footer />
       </main>
-      <AutoStoryScroll />
+      {!sceneReady && <CinematicReadyGate onReady={onSceneReady} />}
+      {sceneReady && <AutoStoryScroll />}
     </>
   );
 }
