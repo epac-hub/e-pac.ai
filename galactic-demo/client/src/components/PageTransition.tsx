@@ -119,7 +119,9 @@ function LiquidMorphMesh({ progress, origin }: { progress: number; origin: [numb
     if (meshRef.current) {
       const mat = meshRef.current.material as THREE.ShaderMaterial;
       mat.uniforms.uTime.value = state.clock.getElapsedTime();
-      mat.uniforms.uProgress.value += (progress - mat.uniforms.uProgress.value) * 0.08;
+      // GSAP already eases progress; a second low-pass left the dark portal
+      // lingering over the next page, especially visible in the light theme.
+      mat.uniforms.uProgress.value = progress;
       mat.uniforms.uOrigin.value.set(origin[0], origin[1]);
     }
   });
@@ -149,6 +151,11 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
 
   const navigateWithPortal = useCallback((path: string) => {
     if (isTransitioning) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setLocation(path);
+      window.scrollTo(0, 0);
+      return;
+    }
     setIsTransitioning(true);
     pendingPath.current = path;
 

@@ -5,7 +5,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 const STAR_COUNT = 1500;
 
-function MovingStars({ boosted, light }: { boosted: boolean; light: boolean }) {
+function MovingStars({ boosted, light, reducedMotion }: { boosted: boolean; light: boolean; reducedMotion: boolean }) {
   const starsRef = useRef<THREE.Points>(null);
   const pointer = useRef({ x: 0, y: 0, active: false });
   const { viewport } = useThree();
@@ -35,7 +35,7 @@ function MovingStars({ boosted, light }: { boosted: boolean; light: boolean }) {
   }, []);
 
   useFrame((_, frameDelta) => {
-    if (!starsRef.current) return;
+    if (!starsRef.current || reducedMotion) return;
     const delta = Math.min(frameDelta, 0.05);
     const array = starsRef.current.geometry.attributes.position.array as Float32Array;
     const speed = boosted ? 80 : 40;
@@ -84,6 +84,14 @@ function MovingStars({ boosted, light }: { boosted: boolean; light: boolean }) {
 export default function GlobalStarfield() {
   const { theme } = useTheme();
   const [boosted, setBoosted] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = () => setReducedMotion(media.matches);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     const onBoost = (event: Event) => {
@@ -101,7 +109,7 @@ export default function GlobalStarfield() {
         gl={{ alpha: true, antialias: false }}
         style={{ background: "transparent" }}
       >
-        <MovingStars boosted={boosted} light={theme === "light"} />
+        <MovingStars boosted={boosted} light={theme === "light"} reducedMotion={reducedMotion} />
       </Canvas>
     </div>
   );

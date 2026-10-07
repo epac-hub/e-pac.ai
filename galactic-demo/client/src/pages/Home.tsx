@@ -1326,6 +1326,7 @@ function GlitchText({ children, className = "" }: { children: string; className?
 // ============================================================
 function HeroSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1.2 } });
@@ -1350,12 +1351,12 @@ function HeroSection() {
     >
       <div className="hero-cinema absolute inset-0 pointer-events-none" aria-hidden="true">
         <picture>
-          <source media="(max-width: 767px)" srcSet={mediaPath("hero-mobile-poster_061ff7a1.jpg")} />
+          <source media="(max-width: 767px)" srcSet={mediaPath(theme === "light" ? "hero-light-mobile_65a949e3.jpg" : "hero-mobile-poster_061ff7a1.jpg")} />
           <img
-            src={mediaPath("hero-poster_c4087cb3.jpg")}
+            src={mediaPath(theme === "light" ? "hero-light-desktop_5b852539.jpg" : "hero-poster_c4087cb3.jpg")}
             alt=""
             fetchPriority="high"
-            className="absolute inset-0 w-full h-full object-cover opacity-65 md:opacity-80"
+            className="absolute inset-0 w-full h-full object-cover opacity-80"
           />
         </picture>
         <video
@@ -1366,36 +1367,36 @@ function HeroSection() {
           playsInline
           preload="metadata"
           poster={mediaPath("hero-poster_c4087cb3.jpg")}
-          className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-65 motion-reduce:hidden"
+          className="hidden md:dark:block absolute inset-0 w-full h-full object-cover opacity-65 motion-reduce:hidden"
         >
           <source src={mediaPath("seedance-web_15a96ec9.mp4")} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0015]/25 via-[#0a0015]/10 to-[#0a0015]/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0015]/25 via-[#0a0015]/10 to-[#0a0015]/60 dark:block hidden" />
       </div>
       {/* Content */}
       <div className="hero-copy relative z-10 text-center px-4">
-        <div className="overflow-hidden mb-2">
+        <div className="overflow-hidden mb-2 px-3 -mx-3">
           <GlitchText
             className="hero-line-1 text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter text-white leading-[0.9]"
           >
             BEYOND THE
           </GlitchText>
         </div>
-        <div className="overflow-hidden">
+        <div className="overflow-hidden px-3 -mx-3">
           <GlitchText
-            className="hero-line-2 text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter text-[#8b5cf6] leading-[0.9]"
+            className="hero-line-2 text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] font-bold tracking-tighter text-[#a78bfa] leading-[0.9]"
           >
             VISIBLE
           </GlitchText>
         </div>
-        <p className="hero-subtitle text-lg md:text-xl text-white/50 mt-8 max-w-xl mx-auto tracking-wide">
+        <p className="hero-subtitle text-lg md:text-xl text-white/75 mt-8 max-w-xl mx-auto tracking-wide">
           A showcase of award-winning web design techniques. GSAP animations, 3D WebGL, scroll-driven storytelling, and immersive interactions.
         </p>
       </div>
 
       {/* Scroll indicator */}
       <div className="hero-scroll-indicator absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <span className="text-white/30 text-xs uppercase tracking-[0.3em]">Scroll</span>
+        <span className="text-white/65 text-xs uppercase tracking-[0.3em]">Scroll</span>
         <div className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent" />
       </div>
     </section>
@@ -1474,11 +1475,11 @@ function TextRevealSection() {
           loop
           playsInline
           preload="none"
-          className="story-cinema hidden md:block absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none motion-reduce:hidden"
+          className="story-cinema hidden md:dark:block absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none motion-reduce:hidden"
         >
           <source src={mediaPath("higgsfield-web_9f6a141d.mp4")} type="video/mp4" />
         </video>
-        <div aria-hidden="true" className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#0a0015]/50 via-[#0a0015]/25 to-[#0a0015]/50" />
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#0a0015]/50 via-[#0a0015]/25 to-[#0a0015]/50 dark:block hidden" />
         <span className="relative z-10 text-[#a78bfa] text-xs uppercase tracking-[0.4em] mb-8 block">Our Philosophy</span>
         <div ref={paragraphRef} className="relative z-10 max-w-4xl text-center px-4">
           {story.map((sentence, pIdx) => (
@@ -2114,10 +2115,13 @@ export default function Home() {
     });
 
     lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    const updateLenis = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      gsap.ticker.remove(updateLenis);
+      lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
     };
   }, []);

@@ -134,6 +134,7 @@ body::after {
 /* Smooth scroll for non-Lenis fallback */
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 /* Grid animation for loader */
@@ -236,12 +237,17 @@ html {
 
 :root:not(.dark) .theme-switch {
   background-color: rgba(255, 255, 255, 0.9);
+  color: #352344;
   border-color: rgba(88, 57, 125, 0.3);
   box-shadow: 0 3px 18px rgba(67, 41, 93, 0.13);
 }
 
 :root:not(.dark) .floating-nav [class*="text-white/"] {
   color: #514565;
+}
+
+:root:not(.dark) .floating-nav span.opacity-100 {
+  color: #4d237a;
 }
 
 :root:not(.dark) .floating-nav [class*="bg-white/"] {
@@ -380,8 +386,8 @@ html {
   overflow: hidden;
   pointer-events: none;
   opacity: 0.86;
-  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0.6) 43%, #000 82%);
-  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0.6) 43%, #000 82%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.52) 43%, #000 82%);
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.52) 43%, #000 82%);
 }
 
 .global-starfield canvas {
