@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useLayoutEffect, useState } from "react";
+import { flushSync } from "react-dom";
 
 type Theme = "light" | "dark";
 
@@ -33,7 +34,7 @@ export function ThemeProvider({
     return defaultTheme;
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     if (theme === "dark") {
       root.classList.add("dark");
@@ -48,7 +49,12 @@ export function ThemeProvider({
 
   const toggleTheme = switchable
     ? () => {
-        setTheme(prev => (prev === "light" ? "dark" : "light"));
+        const change = () => flushSync(() => setTheme(prev => (prev === "light" ? "dark" : "light")));
+        if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          document.startViewTransition(change);
+        } else {
+          change();
+        }
       }
     : undefined;
 

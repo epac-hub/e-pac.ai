@@ -27,13 +27,13 @@ export default function AutoStoryScroll() {
     // the pause. Focus and text selection hold the pause until released.
     const onWheel = () => pauseFor(8000);
     const onTouch = () => pauseFor(8000);
-    const onPointerDown = () => {
+    const onPointerDown = (event: PointerEvent) => {
       pointerHeld = true;
-      pauseFor(8000);
+      pauseFor(event.target instanceof Element && event.target.closest(".theme-switch") ? 1800 : 8000);
     };
-    const onPointerUp = () => {
+    const onPointerUp = (event: PointerEvent) => {
       pointerHeld = false;
-      pauseFor(8000);
+      pauseFor(event.target instanceof Element && event.target.closest(".theme-switch") ? 1800 : 8000);
     };
     const onKeyDown = (event: KeyboardEvent) => {
       if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", " ", "Home", "End", "Tab"].includes(event.key)) pauseFor(8000);
@@ -57,7 +57,10 @@ export default function AutoStoryScroll() {
       lastTime = now;
 
       const focused = document.activeElement;
-      const editingOrNavigating = focused instanceof HTMLElement && focused.matches("input, textarea, select, button, a, [contenteditable='true']");
+      const editingOrNavigating = focused instanceof HTMLElement && (
+        focused.matches("input, textarea, select, [contenteditable='true']") ||
+        (focused.matches("button, a") && focused.matches(":focus-visible"))
+      );
       const selecting = Boolean(window.getSelection()?.toString().trim());
       if (document.visibilityState !== "visible" || pointerHeld || editingOrNavigating || selecting || now < pausedUntil) {
         frame = requestAnimationFrame(tick);

@@ -8,6 +8,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useTheme } from "@/contexts/ThemeContext";
 import AutoStoryScroll from "@/components/AutoStoryScroll";
+import CinematicReadyGate from "@/components/CinematicReadyGate";
 import { mediaPath } from "@/lib/media";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -1740,6 +1741,23 @@ function CardsSection() {
             </h2>
           </MagneticText>
 
+          <div className="media-workflow mb-16" aria-label="Cinematic production workflow">
+            <p className="text-center text-[10px] uppercase tracking-[0.3em] text-[#a78bfa] mb-6">Behind the experience</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { name: "Seedance", role: "Cinematic hero motion", stage: "seedance" },
+                { name: "Higgsfield", role: "Narrative motion", stage: "higgsfield" },
+                { name: "Google AI Studio", role: "Visual review in production", stage: "ai-studio" },
+              ].map((tool) => (
+                <article key={tool.stage} data-media-stage={tool.stage} className="media-workflow-card relative overflow-hidden rounded-xl px-6 py-5">
+                  <span className="relative z-10 block text-[10px] uppercase tracking-[0.22em] opacity-65">Creative process</span>
+                  <h3 className="relative z-10 mt-2 text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>{tool.name}</h3>
+                  <p className="relative z-10 mt-1 text-sm opacity-75">{tool.role}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cards.map((card, i) => (
               <div
@@ -2106,6 +2124,8 @@ function Footer() {
 // MAIN HOME PAGE
 // ============================================================
 export default function Home() {
+  const [sceneReady, setSceneReady] = useState(false);
+  const onSceneReady = useCallback(() => setSceneReady(true), []);
   // Initialize Lenis smooth scroll
   useEffect(() => {
     const lenis = new Lenis({
@@ -2129,7 +2149,7 @@ export default function Home() {
   return (
     <PerformanceProvider>
       <SoundProvider>
-        <HomeContent />
+        <HomeContent sceneReady={sceneReady} onSceneReady={onSceneReady} />
       </SoundProvider>
     </PerformanceProvider>
   );
@@ -2260,7 +2280,7 @@ function ScrollProgressBar() {
   );
 }
 
-function HomeContent() {
+function HomeContent({ sceneReady, onSceneReady }: { sceneReady: boolean; onSceneReady: () => void }) {
   const { isLowEnd } = usePerformanceMode();
 
   return (
@@ -2284,7 +2304,8 @@ function HomeContent() {
         <ContactSection />
         <Footer />
       </main>
-      <AutoStoryScroll />
+      {!sceneReady && <CinematicReadyGate onReady={onSceneReady} />}
+      {sceneReady && <AutoStoryScroll />}
     </>
   );
 }

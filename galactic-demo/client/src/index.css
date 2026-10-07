@@ -390,6 +390,10 @@ html {
   mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.52) 43%, #000 82%);
 }
 
+.global-starfield * {
+  pointer-events: none !important;
+}
+
 .global-starfield canvas {
   display: block;
   width: 100%;
@@ -399,4 +403,65 @@ html {
 :root:not(.dark) .global-starfield {
   opacity: 0.6;
   mix-blend-mode: multiply;
+}
+
+/* The loader waits for the first usable scene, not for a cosmetic percentage. */
+.cinematic-ready-gate {
+  background: radial-gradient(circle at 50% 45%, #241437 0%, #0c081a 65%);
+  color: #f8f4ff;
+  opacity: 1;
+  transition: opacity 340ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+:root:not(.dark) .cinematic-ready-gate {
+  background: radial-gradient(circle at 50% 45%, #eee2fb 0%, #f6f1fb 72%);
+  color: #2b1b3c;
+}
+.cinematic-ready-gate--exiting { opacity: 0; }
+.cinematic-ready-gate__content { transition: transform 340ms cubic-bezier(0.23, 1, 0.32, 1); }
+.cinematic-ready-gate--exiting .cinematic-ready-gate__content { transform: translateY(-7px); }
+.cinematic-ready-gate__orb {
+  border-top-color: #b794ff;
+  box-shadow: 0 0 22px rgba(139, 92, 246, 0.2);
+  animation: cinematic-orbit 1400ms linear infinite;
+}
+@keyframes cinematic-orbit { to { transform: rotate(360deg); } }
+
+/* A single composited dissolve bridges all colors and both video/poster states. */
+::view-transition-old(root) { animation: none; }
+::view-transition-new(root) { animation: theme-dissolve 460ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+@keyframes theme-dissolve { from { opacity: 0; } to { opacity: 1; } }
+
+/* Production credits are informative, not fake buttons or live AI features. */
+.media-workflow-card {
+  isolation: isolate;
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  background: rgba(23, 14, 42, 0.58);
+  color: #f8f4ff;
+  transition: transform 240ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.media-workflow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(139, 92, 246, 0.16), rgba(185, 155, 247, 0.04));
+  opacity: 0;
+  transition: opacity 240ms cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+}
+:root:not(.dark) .media-workflow-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(91, 55, 138, 0.25);
+  color: #241a35;
+}
+:root:not(.dark) .media-workflow-card::before {
+  background: linear-gradient(120deg, rgba(107, 61, 168, 0.11), rgba(228, 210, 250, 0.05));
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .media-workflow-card:hover { transform: translateY(-4px) scale(1.012); }
+  .media-workflow-card:hover::before { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.01ms !important; }
+  .cinematic-ready-gate__orb { animation: none; }
+  .cinematic-ready-gate, .cinematic-ready-gate__content, .media-workflow-card, .media-workflow-card::before { transition-duration: 0.01ms !important; }
 }
