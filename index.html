@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ePAC, LLC</title>
+<meta name="description" content="ePAC, LLC — compañía de Puerto Rico que impulsa iniciativas de salud, farmacia comunitaria y medios de política de salud.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBFAF7; --surface:#FFFFFF; --line:#E6E3DC;
+    --ink:#161512; --ink-2:#4C4A44; --ink-3:#86837A;
+    --accent:#1B4D3E; --accent-ink:#FFFFFF;
+    --shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px rgba(0,0,0,.05);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E0F0E; --surface:#161816; --line:#2A2D2A;
+      --ink:#F2F1EC; --ink-2:#B9B8B1; --ink-3:#86837A;
+      --accent:#6FB79B; --accent-ink:#0E0F0E;
+      --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E0F0E; --surface:#161816; --line:#2A2D2A;
+    --ink:#F2F1EC; --ink-2:#B9B8B1; --ink-3:#86837A;
+    --accent:#6FB79B; --accent-ink:#0E0F0E;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Inter","Segoe UI",system-ui,sans-serif;
+    font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px; margin:0 auto; padding-inline:clamp(20px,5vw,40px)}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif; font-weight:500; line-height:1.1; margin:0; letter-spacing:-.01em}
+  a{color:inherit}
+  .mono{font-variant-numeric:tabular-nums}
+
+  /* Header */
+  header{border-bottom:1px solid var(--line)}
+  .bar{display:flex; align-items:center; justify-content:space-between; padding-block:20px}
+  .brand{display:flex; align-items:center; gap:12px; font-family:"Fraunces",serif; font-size:22px; font-weight:500}
+  .mark{width:34px; height:34px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+    display:grid; place-items:center; font-weight:600; font-size:14px; font-family:"Inter",sans-serif}
+  nav a{margin-left:22px; color:var(--ink-2); text-decoration:none; font-size:15px}
+  nav a:hover{color:var(--ink)}
+  @media(max-width:620px){nav{display:none}}
+
+  /* Hero */
+  .hero{padding-block:clamp(56px,9vw,104px)}
+  .eyebrow{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:0 0 18px}
+  .hero h1{font-size:clamp(38px,6.5vw,68px); max-width:16ch}
+  .hero p{font-size:clamp(18px,2.4vw,21px); color:var(--ink-2); max-width:58ch; margin:22px 0 0}
+  .cta{display:inline-flex; align-items:center; gap:8px; margin-top:34px; background:var(--accent);
+    color:var(--accent-ink); text-decoration:none; padding:13px 22px; border-radius:999px; font-weight:600; font-size:15px}
+  .cta:hover{opacity:.92}
+
+  /* Sections */
+  section{padding-block:clamp(44px,7vw,80px); border-top:1px solid var(--line)}
+  .sec-head{max-width:60ch; margin-bottom:34px}
+  .sec-head h2{font-size:clamp(26px,3.4vw,38px)}
+  .sec-head p{color:var(--ink-2); margin:12px 0 0}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:24px; box-shadow:var(--shadow)}
+  .card h3{font-size:21px}
+  .card .tag{font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600; font-family:"Inter",sans-serif; margin-bottom:12px}
+  .card p{color:var(--ink-2); margin:10px 0 0; font-size:15.5px}
+
+  .values{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px}
+  .value{padding:20px; border:1px solid var(--line); border-radius:14px}
+  .value h3{font-family:"Inter",sans-serif; font-size:16px; font-weight:600}
+  .value p{color:var(--ink-2); margin:8px 0 0; font-size:15px}
+
+  /* Contact */
+  .contact-card{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:clamp(24px,4vw,40px); box-shadow:var(--shadow); display:grid; gap:14px}
+  .contact-row{display:flex; gap:14px; align-items:baseline; flex-wrap:wrap}
+  .contact-row .k{font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); min-width:120px}
+  .contact-row .v{color:var(--ink)}
+  .draft{display:inline-block; font-size:12.5px; color:var(--ink-3); border:1px dashed var(--line); border-radius:8px; padding:3px 10px}
+
+  footer{border-top:1px solid var(--line); padding-block:30px; color:var(--ink-3); font-size:14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><span class="mark">eP</span> ePAC, LLC</div>
+    <nav>
+      <a href="#iniciativas">Iniciativas</a>
+      <a href="#principios">Principios</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <p class="eyebrow">Puerto Rico</p>
+    <h1>Salud, farmacia y política de salud, con rigor.</h1>
+    <p>ePAC, LLC es una compañía de Puerto Rico que desarrolla y respalda iniciativas de salud comunitaria, farmacia y medios de política de salud, con un enfoque operacional y de cumplimiento.</p>
+    <a class="cta" href="#contacto">Hablemos &rarr;</a>
+  </div>
+
+  <section id="iniciativas">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Iniciativas</h2>
+        <p>Proyectos bajo el paraguas de ePAC, LLC. El detalle de cada uno está en revisión.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">Farmacia comunitaria</div>
+          <h3>Súper Farmacia Isla Verde</h3>
+          <p>Servicio farmacéutico comunitario y atención directa al paciente.</p>
+        </article>
+        <article class="card">
+          <div class="tag">Salud organizacional</div>
+          <h3>Empresa Saludable</h3>
+          <p>Bienestar y salud en el entorno laboral para organizaciones.</p>
+        </article>
+        <article class="card">
+          <div class="tag">Medios · política de salud</div>
+          <h3>The Healthcare Paradox</h3>
+          <p>Conversación y análisis sobre los retos del sistema de salud.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="principios">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Principios</h2>
+        <p>Cómo trabajamos.</p>
+      </div>
+      <div class="values">
+        <div class="value"><h3>Rigor</h3><p>Decisiones basadas en evidencia y en la realidad operacional.</p></div>
+        <div class="value"><h3>Cumplimiento</h3><p>Apego a los marcos regulatorios que aplican a cada iniciativa.</p></div>
+        <div class="value"><h3>Comunidad</h3><p>El paciente y la comunidad de Puerto Rico en el centro.</p></div>
+        <div class="value"><h3>Durabilidad</h3><p>Soluciones de calidad, pensadas para escalar y permanecer.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Contacto</h2>
+        <p>Para colaboraciones, prensa o información general.</p>
+      </div>
+      <div class="contact-card">
+        <div class="contact-row"><span class="k">Compañía</span><span class="v">ePAC, LLC &middot; Puerto Rico</span></div>
+        <div class="contact-row"><span class="k">Correo</span><span class="v draft">por definir — colocar correo oficial</span></div>
+        <div class="contact-row"><span class="k">Dirección</span><span class="v draft">por confirmar</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap" style="width:100%; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:0;">
+    <span>&copy; <span class="mono">2026</span> ePAC, LLC. Todos los derechos reservados.</span>
+    <span>e-pac.ai</span>
+  </div>
+</footer>
+</body>
+</html>
