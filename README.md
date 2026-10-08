@@ -18,7 +18,7 @@ Se retiraron del HTML el runtime, la analítica (Umami, Plausible) y el manifies
 
 ## Dominio
 
-El archivo `CNAME` conecta GitHub Pages con `e-pac.ai`. El DNS se administra en Name.com y debe contener:
+El archivo `CNAME` conecta GitHub Pages con `e-pac.ai`. El dominio se compró en Lovable (registrador: Name.com) y su DNS se edita en Lovable: Workspace settings → Workspace domains → Configure → DNS records. Debe contener:
 
 | Tipo | Nombre | Valor |
 |---|---|---|
