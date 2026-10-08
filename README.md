@@ -15,3 +15,15 @@ ePAC, LLC — e-pac.ai
 El sitio funciona en la raíz de un dominio y en `epac-hub.github.io/e-pac.ai/`: el cargador de `index.html` define `window.__EPAC_BASE__` y el paquete JavaScript lo usa como base del enrutador y de los archivos de `manus-storage/`.
 
 Se retiraron del HTML el runtime, la analítica (Umami, Plausible) y el manifiesto de Manus.
+
+## Dominio
+
+El archivo `CNAME` conecta GitHub Pages con `e-pac.ai`. El dominio se compró en Lovable (registrador: Name.com) y su DNS se edita en Lovable: Workspace settings → Workspace domains → Configure → DNS records. Debe contener:
+
+| Tipo | Nombre | Valor |
+|---|---|---|
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| CNAME | `www` | `epac-hub.github.io` |
