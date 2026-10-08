@@ -5,7 +5,7 @@ ePAC, LLC — e-pac.ai
 
 | Ruta | Contenido |
 |---|---|
-| `index.html`, `404.html`, `assets/`, `manus-storage/`, `og-image.png` | Sitio principal: copia de la compilación publicada en Manus (`galacticweb-g4c3g6qm.manus.space`, paquete `index-unmr3uUx.js`). |
+| `index.html`, `404.html`, `assets/`, `manus-storage/`, `og-image.png` | Sitio principal: copia de la compilación publicada en Manus (`galacticweb-g4c3g6qm.manus.space`, paquete `index-B3t_rDc5.js`). |
 | `landing/` | Landing original de ePAC, LLC. |
 | `experience/` | Compilación de la experiencia interactiva generada desde `galactic-demo/`, con base `/e-pac.ai/experience/`. |
 | `galactic-demo/` | Código fuente React/TypeScript de la experiencia (ver `PRODUCTION_WORKFLOW.md`). |

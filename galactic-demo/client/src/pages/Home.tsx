@@ -1714,6 +1714,29 @@ function CardsSection() {
       },
       start: "top 85%",
     });
+
+    const motion = gsap.matchMedia();
+    motion.add("(prefers-reduced-motion: no-preference)", () => {
+      sectionRef.current?.querySelectorAll<HTMLElement>(".media-workflow-card").forEach((card) => {
+        const layers = [
+          { element: card.querySelector<HTMLElement>(".media-workflow-depth--back"), from: -18, to: 18 },
+          { element: card.querySelector<HTMLElement>(".media-workflow-depth--front"), from: 8, to: -8 },
+        ];
+        layers.forEach(({ element, from, to }) => {
+          if (!element) return;
+          gsap.fromTo(element, { y: from }, {
+            y: to,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.45,
+            },
+          });
+        });
+      });
+    });
   }, { scope: sectionRef });
 
   const cards = [
@@ -1750,6 +1773,8 @@ function CardsSection() {
                 { name: "Google AI Studio", role: "Visual review in production", stage: "ai-studio" },
               ].map((tool) => (
                 <article key={tool.stage} data-media-stage={tool.stage} className="media-workflow-card relative overflow-hidden rounded-xl px-6 py-5">
+                  <span aria-hidden="true" className="media-workflow-depth media-workflow-depth--back" />
+                  <span aria-hidden="true" className="media-workflow-depth media-workflow-depth--front" />
                   <span className="relative z-10 block text-[10px] uppercase tracking-[0.22em] opacity-65">Creative process</span>
                   <h3 className="relative z-10 mt-2 text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>{tool.name}</h3>
                   <p className="relative z-10 mt-1 text-sm opacity-75">{tool.role}</p>
