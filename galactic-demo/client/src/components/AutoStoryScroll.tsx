@@ -12,6 +12,7 @@ export default function AutoStoryScroll() {
     let lastTime = performance.now();
     let speed = 0;
     let pausedUntil = 0;
+    let modalOpen = false;
 
     const stop = () => {
       active = false;
@@ -42,6 +43,16 @@ export default function AutoStoryScroll() {
       lastTime = performance.now();
       if (document.visibilityState === "visible") pauseFor(1500);
     };
+    const onModalState = (event: Event) => {
+      modalOpen = Boolean((event as CustomEvent<{ open: boolean }>).detail?.open);
+      speed = 0;
+      // Dismissing a dialog starts a short reading pause, even if the user
+      // used Escape. Never resume with accumulated speed or time.
+      if (!modalOpen) {
+        lastTime = performance.now();
+        pausedUntil = performance.now() + 2000;
+      }
+    };
 
     window.addEventListener("wheel", onWheel, { passive: true });
     window.addEventListener("touchstart", onTouch, { passive: true });
@@ -50,6 +61,7 @@ export default function AutoStoryScroll() {
     window.addEventListener("pointercancel", onPointerUp, { passive: true });
     window.addEventListener("keydown", onKeyDown);
     document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("cinematic-modal-state", onModalState);
 
     const tick = (now: number) => {
       if (!active) return;
@@ -62,7 +74,7 @@ export default function AutoStoryScroll() {
         (focused.matches("button, a") && focused.matches(":focus-visible"))
       );
       const selecting = Boolean(window.getSelection()?.toString().trim());
-      if (document.visibilityState !== "visible" || pointerHeld || editingOrNavigating || selecting || now < pausedUntil) {
+      if (modalOpen || document.visibilityState !== "visible" || pointerHeld || editingOrNavigating || selecting || now < pausedUntil) {
         frame = requestAnimationFrame(tick);
         return;
       }
@@ -102,6 +114,7 @@ export default function AutoStoryScroll() {
       window.removeEventListener("pointercancel", onPointerUp);
       window.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("cinematic-modal-state", onModalState);
     };
   }, []);
 

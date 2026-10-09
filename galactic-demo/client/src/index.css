@@ -492,3 +492,99 @@ html {
   .cinematic-ready-gate__orb { animation: none; }
   .cinematic-ready-gate, .cinematic-ready-gate__content, .media-workflow-card, .media-workflow-card::before { transition-duration: 0.01ms !important; }
 }
+
+/* Clickable production cards preserve their independent scroll-depth layers. */
+.media-workflow-hint { color: #c4b5fd; }
+:root:not(.dark) .media-workflow-hint { color: #623894; }
+.media-workflow-trigger { color: inherit; background: transparent; }
+.media-workflow-trigger:focus-visible { outline: 2px solid #b49aff; outline-offset: -4px; }
+:root:not(.dark) .media-workflow-trigger:focus-visible { outline-color: #65389d; }
+.media-workflow-card:has(.media-workflow-trigger:focus-visible)::before { opacity: 1; }
+.media-stage-overlay {
+  z-index: 10010;
+  background: rgba(8, 4, 17, 0.76);
+  backdrop-filter: blur(7px);
+  animation-duration: 180ms;
+}
+.media-stage-dialog {
+  z-index: 10020;
+  display: block;
+  width: calc(100vw - 2rem);
+  max-width: 680px;
+  max-height: min(86dvh, 860px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 32px;
+  border-radius: 20px;
+  border-color: rgba(167, 139, 250, 0.3);
+  background: #171024;
+  color: #f8f4ff;
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.5);
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  text-wrap: pretty;
+}
+/* The custom canvas cursor sits below the dialog; keep native pointing here. */
+.media-stage-dialog, .media-stage-overlay, .media-stage-dialog * { cursor: auto !important; }
+.media-stage-dialog button, .media-stage-dialog summary { cursor: pointer !important; }
+.media-stage-header { position: relative; padding-right: 46px; margin-bottom: 22px; }
+.media-stage-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #c4b5fd; margin-bottom: 12px; }
+.media-stage-title { font-family: var(--font-display); font-size: clamp(26px, 4vw, 36px); line-height: 1.14; letter-spacing: -0.035em; }
+.media-stage-role { font-size: 14px; margin-top: 8px; color: #c4b5fd; }
+.media-stage-close { position: absolute; right: 0; top: 0; width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 50%; background: #211731; }
+.media-stage-summary { color: #e1d8ef; font-size: 16px; line-height: 1.65; }
+.media-stage-facts { margin: 24px 0; display: grid; gap: 18px; }
+.media-stage-facts dt { color: #c4b5fd; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+.media-stage-facts dd { font-size: 15px; line-height: 1.65; color: #e1d8ef; }
+.media-stage-process { border-top: 1px solid rgba(167, 139, 250, 0.24); border-bottom: 1px solid rgba(167, 139, 250, 0.24); }
+.media-stage-process summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; min-height: 48px; list-style: none; font-size: 15px; font-weight: 500; }
+.media-stage-process summary::-webkit-details-marker { display: none; }
+.media-stage-process[open] summary svg { transform: rotate(180deg); }
+.media-stage-process ol { margin: 0 0 20px 22px; list-style: decimal; display: grid; gap: 12px; color: #e1d8ef; font-size: 15px; line-height: 1.6; }
+.media-stage-process li { padding-left: 5px; }
+.media-stage-note { margin: 20px 0; font-size: 13px; line-height: 1.6; color: #c5bad6; }
+.media-stage-return { display: block; width: 100%; min-height: 48px; padding: 12px 18px; border: 1px solid rgba(167, 139, 250, 0.4); border-radius: 10px; background: #302043; font-size: 14px; color: #f8f4ff; }
+.media-stage-dialog button:focus-visible, .media-stage-dialog summary:focus-visible { outline: 2px solid #c4b5fd; outline-offset: 3px; }
+:root:not(.dark) .media-stage-overlay { background: rgba(38, 24, 58, 0.46); }
+:root:not(.dark) .media-stage-dialog { background: #faf7fe; color: #241a35; border-color: rgba(91, 55, 138, 0.3); box-shadow: 0 24px 90px rgba(44, 24, 68, 0.28); }
+:root:not(.dark) .media-stage-eyebrow,
+:root:not(.dark) .media-stage-role,
+:root:not(.dark) .media-stage-facts dt { color: #623894; }
+:root:not(.dark) .media-stage-summary,
+:root:not(.dark) .media-stage-facts dd,
+:root:not(.dark) .media-stage-process ol { color: #514565; }
+:root:not(.dark) .media-stage-note { color: #605270; }
+:root:not(.dark) .media-stage-close { background: #f0e9f8; border-color: #c4b2da; }
+:root:not(.dark) .media-stage-process { border-color: #d8cce6; }
+:root:not(.dark) .media-stage-return { color: #45246e; background: #efe7f8; border-color: #ba9bd7; }
+:root:not(.dark) .media-stage-dialog button:focus-visible,
+:root:not(.dark) .media-stage-dialog summary:focus-visible { outline-color: #65389d; }
+@media (max-width: 480px) {
+  .media-stage-dialog { padding: 24px 20px; border-radius: 16px; max-height: 88dvh; }
+  .media-stage-header { padding-right: 42px; }
+  .media-stage-role { max-width: 190px; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .media-stage-close:hover, .media-stage-return:hover { filter: brightness(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .media-stage-dialog, .media-stage-overlay { animation: none !important; }
+}
+
+/* Keep an obvious exit available while long production notes scroll. */
+.media-stage-header {
+  position: sticky;
+  top: -32px;
+  z-index: 2;
+  margin: -32px -32px 22px;
+  padding: 24px 82px 20px 32px;
+  background: #171024;
+  border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+}
+.media-stage-close { right: 24px; top: 24px; }
+:root:not(.dark) .media-stage-header { background: #faf7fe; border-color: #d8cce6; }
+@media (max-width: 480px) {
+  .media-stage-header { top: -24px; margin: -24px -20px 20px; padding: 24px 72px 18px 20px; }
+  .media-stage-close { right: 16px; top: 16px; }
+}

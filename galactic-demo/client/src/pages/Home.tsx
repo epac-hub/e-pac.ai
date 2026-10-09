@@ -9,8 +9,8 @@ import * as THREE from "three";
 import { useTheme } from "@/contexts/ThemeContext";
 import AutoStoryScroll from "@/components/AutoStoryScroll";
 import CinematicReadyGate from "@/components/CinematicReadyGate";
+import ProductionStageDetails, { PRODUCTION_STAGES } from "@/components/ProductionStageDetails";
 import { mediaPath } from "@/lib/media";
-
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // ============================================================
@@ -1767,17 +1767,15 @@ function CardsSection() {
           <div className="media-workflow mb-16" aria-label="Cinematic production workflow">
             <p className="text-center text-[10px] uppercase tracking-[0.3em] text-[#a78bfa] mb-6">Behind the experience</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                { name: "Seedance", role: "Cinematic hero motion", stage: "seedance" },
-                { name: "Higgsfield", role: "Narrative motion", stage: "higgsfield" },
-                { name: "Google AI Studio", role: "Visual review in production", stage: "ai-studio" },
-              ].map((tool) => (
+              {PRODUCTION_STAGES.map((tool) => (
                 <article key={tool.stage} data-media-stage={tool.stage} className="media-workflow-card relative overflow-hidden rounded-xl px-6 py-5">
                   <span aria-hidden="true" className="media-workflow-depth media-workflow-depth--back" />
                   <span aria-hidden="true" className="media-workflow-depth media-workflow-depth--front" />
                   <span className="relative z-10 block text-[10px] uppercase tracking-[0.22em] opacity-65">Creative process</span>
                   <h3 className="relative z-10 mt-2 text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>{tool.name}</h3>
                   <p className="relative z-10 mt-1 text-sm opacity-75">{tool.role}</p>
+                  <span aria-hidden="true" className="media-workflow-hint relative z-10 mt-4 block text-xs">Explore the process</span>
+                  <ProductionStageDetails tool={tool} />
                 </article>
               ))}
             </div>
@@ -2164,7 +2162,14 @@ export default function Home() {
     gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
+    const onModalState = (event: Event) => {
+      if ((event as CustomEvent<{ open: boolean }>).detail?.open) lenis.stop();
+      else lenis.start();
+    };
+    window.addEventListener("cinematic-modal-state", onModalState);
+
     return () => {
+      window.removeEventListener("cinematic-modal-state", onModalState);
       gsap.ticker.remove(updateLenis);
       lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
