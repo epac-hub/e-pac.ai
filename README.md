@@ -5,14 +5,15 @@ ePAC, LLC — e-pac.ai
 
 | Ruta | Contenido |
 |---|---|
-| `index.html`, `404.html`, `assets/`, `manus-storage/`, `og-image.png` | Sitio principal: copia de la compilación publicada en Manus (`galacticweb-g4c3g6qm.manus.space`, paquete `index-DE20i3Ka.js`). |
+| `index.html`, `404.html` | Portada cinematográfica de ePAC: cinco escenas a pantalla completa (Apertura, Misión, Iniciativas, Principios, Contacto) con cortes entre ellas, sin desplazamiento largo. HTML, CSS y JavaScript sin compilación; usa los videos e imágenes de `manus-storage/`. |
+| `assets/`, `manus-storage/`, `og-image.png` | Compilación anterior de Manus (ya no la carga la portada) y sus medios, que la portada reutiliza. |
 | `landing/` | Landing original de ePAC, LLC. |
 | `experience/` | Compilación de la experiencia interactiva generada desde `galactic-demo/`, con base `/e-pac.ai/experience/`. |
 | `galactic-demo/` | Código fuente React/TypeScript de la experiencia (ver `PRODUCTION_WORKFLOW.md`). |
 
-`404.html` es una copia de `index.html` para que GitHub Pages sirva las rutas internas (`/about`, `/work`, `/case-study/...`).
+`404.html` es una copia de `index.html`, para que cualquier ruta desconocida muestre la portada.
 
-El sitio funciona en la raíz de un dominio y en `epac-hub.github.io/e-pac.ai/`: el cargador de `index.html` define `window.__EPAC_BASE__` y el paquete JavaScript lo usa como base del enrutador y de los archivos de `manus-storage/`.
+La portada usa rutas relativas, así que funciona en `e-pac.ai` y en `epac-hub.github.io/e-pac.ai/`. Navegación: flechas del teclado, rueda, deslizar en el móvil o la barra de capítulos; avanza sola cada 9 segundos hasta el último capítulo.
 
 Se retiraron del HTML el runtime, la analítica (Umami, Plausible) y el manifiesto de Manus.
 
