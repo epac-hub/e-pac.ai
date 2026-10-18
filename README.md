@@ -5,7 +5,9 @@ ePAC, LLC — e-pac.ai
 
 | Ruta | Contenido |
 |---|---|
-| `index.html`, `404.html`, `assets/`, `manus-storage/`, `og-image.png` | Sitio principal: copia de la compilación publicada en Manus (`galacticweb-g4c3g6qm.manus.space`, paquete `index-DE20i3Ka.js`). |
+| `index.html`, `assets/`, `media/`, `favicon.svg`, `og-image.png` | Current ePAC landing page, replaced on 10-18-2026; statically rendered React/TypeScript build. See `LANDING_PAGE.md`. |
+| `epac-landing/` | Editable source, pinned build toolchain, content/media provenance and QA for the current landing page. |
+| `404.html`, historical hashed assets, `manus-storage/` | Preserved previous site and deep-link fallback; no historical paths were deleted. |
 | `landing/` | Landing original de ePAC, LLC. |
 | `experience/` | Compilación de la experiencia interactiva generada desde `galactic-demo/`, con base `/e-pac.ai/experience/`. |
 | `galactic-demo/` | Código fuente React/TypeScript de la experiencia (ver `PRODUCTION_WORKFLOW.md`). |
