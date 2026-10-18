@@ -21,7 +21,7 @@ The reused private tools/visual-qa-gemini.py ran successfully against rendered d
 - [x] Actual Gemini screenshot review performed; provider key absent from browser code.
 - [x] Process dialog opened natively, focused its close control, fit the viewport, locked background scrolling and closed with Escape. Motion-off removed both WebGL canvases, retained clip-path none and stacked focus content as a grid.
 - [x] Soundtrack asset returns HTTP 200 audio/mpeg and decodes as MP3, 44.1 kHz stereo. Opt-in and fade logic inspected. The automated browser was document.visibilityState=hidden during the playback test, so the deliberate hidden-tab pause prevented a verified audible-playback result; no playback-success claim is made.
-- [ ] GitHub Pages replacement build and public custom-domain delivery confirmed.
+- [x] GitHub Pages release 5a160b3da6e26be7446f7e1ba773a912313a9d1c built successfully with no reported build error. The public HTTPS page is byte-for-byte identical to the verified local compiled HTML (SHA256 44ed83e8e2eed9920cf489595b7aba5cab2c29c2057d332929e0bb79987a31b4). Domain configuration and historical content remain unchanged.
 
 ## Visualizations and their meaning
 There are no statistical graphs, dashboards or performance KPIs. The visual elements are decorative or navigational, not data representations.
