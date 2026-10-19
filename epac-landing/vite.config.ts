@@ -10,7 +10,9 @@ export default defineConfig(({ isSsrBuild }) => ({
     sourcemap: false,
     rollupOptions: isSsrBuild ? {} : {
       output: {
-        manualChunks: { react: ['react', 'react-dom'], motion: ['gsap', '@gsap/react', 'lenis'] },
+        manualChunks(id: string) {
+          if (/\/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react-runtime';
+        },
       },
     },
   },

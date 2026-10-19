@@ -1,0 +1,16 @@
+{
+  "initial_js": [
+    {
+      "path": "dist/assets/index-Bn_Gysm5.js",
+      "bytes": 20932,
+      "gzip_bytes": 7495
+    },
+    {
+      "path": "dist/assets/react-runtime-Dkgty-vV.js",
+      "bytes": 193685,
+      "gzip_bytes": 60275
+    }
+  ],
+  "initial_js_bytes": 214617,
+  "initial_js_gzip_bytes": 67770
+}

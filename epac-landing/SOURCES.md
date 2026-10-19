@@ -1,17 +1,19 @@
-# Procedencia — portada espacial conservada
+# Procedencia — portada espacial de e-pac.ai
 
-El usuario eligió expresamente conservar y mejorar la portada espacial pública de https://e-pac.ai el 10-19-2026. Su fuente es index.html del repositorio epac-hub/e-pac.ai, commit fcfc9503d9b79f69fac82ac528121374eff56c11; se guarda sin cambios en design-notes/space-original/index.html. Esa versión aporta el concepto negro, estrellas en avance, círculo ePAC. serif blanco, copyright y pista espacial.
+El usuario eligió conservar la portada espacial pública de https://e-pac.ai el 10-19-2026. Su fuente es index.html de epac-hub/e-pac.ai, commit fcfc9503d9b79f69fac82ac528121374eff56c11, conservado en design-notes/space-original/index.html. Se mantienen negro, estrellas en avance, círculo ePAC. serif blanco, copyright y pista espacial.
 
 ## Marca
 
-El logo ePAC. original se copia sin cambios desde brand/epac-logo.png del repositorio. SHA-256 original: 013a68fa148edd8bdd2111b6c2d9bf8899c8034bad4696a104c29934c44663b1. Es distinto del ep. personal usado en las propuestas costeras descartadas. Se conserva el original en public/brand/epac-logo-original.png. Para reparar el antialiasing se produjo una restauración con el prompt de conservación exacta; job job_m_603b7d93b4e3, salida PNG 1920×1920. Revisión visual: ePAC., punto, serif, círculo, blanco/negro y composición conservados. La restauración es una imagen derivada, no el archivo original byte por byte ni un SVG vectorial. La conversión a WebP es lossless, con igualdad de píxeles validada mediante ImageChops.
+PNG original: brand/epac-logo.png del repositorio; SHA-256 013a68fa148edd8bdd2111b6c2d9bf8899c8034bad4696a104c29934c44663b1. Se conserva en public/brand/epac-logo-original.png. La restauración revisada de 1920×1920 (job_m_603b7d93b4e3) mantiene ePAC., punto, serif, círculo y colores. Es un derivado restaurado, no el original byte por byte ni un SVG. WebP de 1920 es lossless. Versiones 640/960 se redimensionan con Lanczos sin recorte y codifican WebP lossless; srcset elige por viewport y DPR. No se rediseña el logo.
 
-## Escena
+## Escena y sonidos
 
-StarFlight.tsx es código original editable de Three.js. Es una escena procedural 3D en tiempo real con cámara perspectiva, posiciones de estrellas, shaders, parallax y estelas sutiles; no un stock video, una filmación real ni un video generado. El fallback usa proyección perspectiva Canvas2D cuando WebGL no está disponible. No hay fondos costeros, casas ni animaciones previas montadas en la portada. La resolución del canvas depende del viewport y DPR; no se promete 4K fijo ni rendimiento no medido.
+StarFlight.tsx es código original editable de WebGL nativo con proyección perspectiva 3D, posiciones/tiempo de estrellas, shaders, parallax y estelas; no stock, filmación, mapa astronómico ni video AI. Reemplaza Three.js en la ruta activa para reducir payload; Canvas2D conserva el fallback. La resolución es adaptativa, sin promesas de 4K o fps universales. La visualización es artística, no una representación científica de estrellas/velocidades.
 
-## Audio y publicación
+space-ambient.mp3 se copia sin cambios desde manus-storage/ambient-space_659e307d.mp3 del repositorio aprobado. No se inventa un recibo de generación. Audio requiere activación explícita. useSpaceAudio.ts sintetiza efectos originales con ruido filtrado, oscilador suave y panning/envolventes de Web Audio; no usa clips externos, voces, música nueva ni archivos de stock. Hover, foco y activación del logo sólo producen efectos después de activar sonido; ocultar la página o desactivar audio silencia la experiencia.
 
-space-ambient.mp3 se copia sin cambios desde manus-storage/ambient-space_659e307d.mp3 del repositorio aprobado. Se conserva su procedencia descrita por el repositorio; no se inventa un recibo de generación. Sólo se reproduce tras la acción de activar sonido. Los metadatos de salud/política/gobierno conservan los del sitio público indicado, no equivalen a una verificación independiente de credenciales corporativas.
+## Medición y publicación
 
-Se publica mediante la configuración existente de GitHub Pages en https://e-pac.ai. No se cambia DNS, CNAME, 404.html, logos originales ni directorios históricos. El artifact de Claude no se usa ni se afirma que su contenido fue accesible.
+PERF.md y QA-evidence registran el payload inicial antes/después con el mismo método gzip. No son mediciones de tiempo de carga, fps o Core Web Vitals de usuarios reales. Metadatos corporativos conservan los valores aportados por el sitio público; no se presenta una verificación independiente de credenciales.
+
+Publicación en https://e-pac.ai por GitHub Pages con CNAME, 404, originales e históricos preservados. El artifact de Claude y las propuestas de Culebra no se usan. No se copia ningún vínculo privado de sesión al código público.

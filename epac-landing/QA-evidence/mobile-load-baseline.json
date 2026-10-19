@@ -1,0 +1,22 @@
+{
+  "initial_js": [
+    {
+      "path": "dist/assets/index-Dr1M-UOW.js",
+      "bytes": 708493,
+      "gzip_bytes": 189465
+    },
+    {
+      "path": "dist/assets/motion-O4yqwNt3.js",
+      "bytes": 79447,
+      "gzip_bytes": 30971
+    },
+    {
+      "path": "dist/assets/react-wBRNdMtK.js",
+      "bytes": 3893,
+      "gzip_bytes": 1514
+    }
+  ],
+  "initial_js_bytes": 791833,
+  "initial_js_gzip_bytes": 221950,
+  "logo_bytes": 480200
+}

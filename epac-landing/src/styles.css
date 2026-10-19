@@ -18,8 +18,9 @@ button { font: inherit; }
   display: grid; place-items: center; text-align: center;
 }
 .mark-perspective { perspective: 1100px; }
-.mark-tilt { transform-style: preserve-3d; }
+.mark-tilt { transform-style: preserve-3d; transition: transform .6s cubic-bezier(.2,.65,.3,1); }
 .mark-arrival { margin: 0; line-height: 0; }
+.logo-sound-surface { display: block; margin: 0; padding: 0; border: 0; background: transparent; color: inherit; line-height: 0; cursor: pointer; }
 .logo {
   display: block; width: min(420px, 76vw, 68svh);
   height: auto; aspect-ratio: 1; margin: 0 auto; object-fit: contain;

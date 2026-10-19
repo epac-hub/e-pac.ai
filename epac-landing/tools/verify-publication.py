@@ -33,7 +33,9 @@ while time.monotonic() < deadline:
                 actual = response.read()
             if actual == expected:
                 assets = []
-                for path in ['/brand/epac-logo-restored.webp', '/brand/epac-logo-original.png', '/media/space-ambient.mp3', '/manus-routes.json', '/landing/', '/experience/']:
+                paths = ['/brand/epac-logo-restored.webp', '/brand/epac-logo-640.webp', '/brand/epac-logo-960.webp', '/brand/epac-logo-original.png', '/media/space-ambient.mp3', '/manus-routes.json', '/landing/', '/experience/']
+                paths.extend(re.findall(r'(?:src|href)="(/assets/[^"<>]+)"', actual.decode()))
+                for path in dict.fromkeys(paths):
                     request = urllib.request.Request('https://e-pac.ai' + path, method='HEAD')
                     with urllib.request.urlopen(request, timeout=20) as response:
                         assets.append({'path': path, 'status': response.status, 'type': response.headers.get('Content-Type')})

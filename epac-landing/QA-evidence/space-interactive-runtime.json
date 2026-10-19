@@ -1,0 +1,134 @@
+{
+  "origin": "https://8328-iw7hwo01yps9dfkm7ax42-a7633fbe.us1.manus.computer",
+  "layouts": [
+    {
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "scrollHeight": 900,
+      "logoLoaded": true,
+      "logoSource": "/brand/epac-logo-640.webp",
+      "logoCenterX": 720,
+      "logoCenterY": 450,
+      "canvasWidth": 1440,
+      "canvasHeight": 900,
+      "renderer": "webgl",
+      "frame": 111,
+      "motion": "playing",
+      "videos": 0,
+      "headings": 1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "scrollHeight": 844,
+      "logoLoaded": true,
+      "logoSource": "/brand/epac-logo-640.webp",
+      "logoCenterX": 194.9921875,
+      "logoCenterY": 421.9921875,
+      "canvasWidth": 390,
+      "canvasHeight": 844,
+      "renderer": "webgl",
+      "frame": 116,
+      "motion": "playing",
+      "videos": 0,
+      "headings": 1
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "scrollWidth": 844,
+      "scrollHeight": 390,
+      "logoLoaded": true,
+      "logoSource": "/brand/epac-logo-640.webp",
+      "logoCenterX": 422,
+      "logoCenterY": 195,
+      "canvasWidth": 844,
+      "canvasHeight": 390,
+      "renderer": "webgl",
+      "frame": 116,
+      "motion": "playing",
+      "videos": 0,
+      "headings": 1
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "scrollWidth": 320,
+      "scrollHeight": 568,
+      "logoLoaded": true,
+      "logoSource": "/brand/epac-logo-640.webp",
+      "logoCenterX": 160,
+      "logoCenterY": 284,
+      "canvasWidth": 320,
+      "canvasHeight": 568,
+      "renderer": "webgl",
+      "frame": 113,
+      "motion": "playing",
+      "videos": 0,
+      "headings": 1
+    },
+    {
+      "width": 3840,
+      "height": 2160,
+      "scrollWidth": 3840,
+      "scrollHeight": 2160,
+      "logoLoaded": true,
+      "logoSource": "/brand/epac-logo-640.webp",
+      "logoCenterX": 1920.0000610351562,
+      "logoCenterY": 1080.0000305175781,
+      "canvasWidth": 3840,
+      "canvasHeight": 2160,
+      "renderer": "webgl",
+      "frame": 18,
+      "motion": "playing",
+      "videos": 0,
+      "headings": 1
+    }
+  ],
+  "movement": {
+    "before": 26,
+    "after": 41,
+    "raster_changed": true
+  },
+  "pause": {
+    "paused": {
+      "frame": 42,
+      "motion": "paused"
+    },
+    "unchanged_frame": 42,
+    "resumed": {
+      "frame": 49,
+      "motion": "playing"
+    }
+  },
+  "audio": {
+    "default_off": true,
+    "explicit_activation_played": true,
+    "muted_hover": {
+      "count": 0,
+      "context": "uninitialized",
+      "requests": 0
+    },
+    "active_hover": {
+      "count": 1,
+      "context": "running"
+    },
+    "keyboard_tap_count": 2,
+    "disabled_sound": {
+      "count": 2,
+      "context": "suspended",
+      "active": "false"
+    }
+  },
+  "reduced_motion": {
+    "frame": 98,
+    "motion": "paused"
+  },
+  "fallback": {
+    "renderer": "canvas2d",
+    "frame": 95,
+    "motion": "playing"
+  }
+}

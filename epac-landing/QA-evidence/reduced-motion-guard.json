@@ -1,0 +1,12 @@
+{
+  "before": {
+    "disabled": true,
+    "frame": 83,
+    "motion": "paused"
+  },
+  "after_click": {
+    "disabled": true,
+    "frame": 83,
+    "motion": "paused"
+  }
+}

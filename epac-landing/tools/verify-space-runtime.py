@@ -82,21 +82,47 @@ async def main():
         resumed = await evaluate("({frame:Number(document.querySelector('canvas').dataset.frame),motion:document.querySelector('canvas').dataset.motion})")
         assert resumed['motion']=='playing' and resumed['frame']>still
         result['pause']={'paused':paused,'unchanged_frame':still,'resumed':resumed}
+        await call('Input.dispatchMouseEvent', {'type':'mouseMoved','x':5,'y':5})
+        center = await evaluate("(() => {const r=document.querySelector('.logo-sound-surface').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()")
+        await call('Input.dispatchMouseEvent', {'type':'mouseMoved',**center})
+        await asyncio.sleep(.2)
+        muted = await evaluate("({count:Number(document.querySelector('.space-home').dataset.soundEffectCount),context:document.querySelector('.space-home').dataset.audioContext,requests:performance.getEntriesByType('resource').filter(r=>r.name.includes('space-ambient.mp3')).length})")
+        assert muted['count']==0 and muted['context']=='uninitialized' and muted['requests']==0, muted
         assert await evaluate("document.querySelector('.audio-control').getAttribute('aria-pressed')") == 'false'
         await evaluate("document.querySelector('.audio-control').click()", True)
         await asyncio.sleep(1.4)
         audio = await evaluate("document.querySelector('.audio-control').getAttribute('aria-pressed')")
         assert audio=='true', 'Audio play() did not resolve'
+        await call('Input.dispatchMouseEvent', {'type':'mouseMoved','x':5,'y':5})
+        await call('Input.dispatchMouseEvent', {'type':'mouseMoved',**center})
+        await asyncio.sleep(.2)
+        hover = await evaluate("({count:Number(document.querySelector('.space-home').dataset.soundEffectCount),context:document.querySelector('.space-home').dataset.audioContext})")
+        assert hover['count']>muted['count'] and hover['context']=='running', hover
+        await asyncio.sleep(.8)
+        await evaluate("document.querySelector('.logo-sound-surface').click()", True)
+        keyboard = await evaluate("Number(document.querySelector('.space-home').dataset.soundEffectCount)")
+        assert keyboard>hover['count'], 'Keyboard/tap equivalent did not play'
         await evaluate("document.querySelector('.audio-control').click()", True)
-        result['audio']={'default_off':True,'explicit_activation_played':True}
+        await asyncio.sleep(.4)
+        await evaluate("document.querySelector('.logo-sound-surface').click()", True)
+        stopped = await evaluate("({count:Number(document.querySelector('.space-home').dataset.soundEffectCount),context:document.querySelector('.space-home').dataset.audioContext,active:document.querySelector('.space-home').dataset.soundActive})")
+        assert stopped['count']==keyboard and stopped['active']=='false', stopped
+        for _ in range(10):
+            if stopped['context']=='suspended': break
+            await asyncio.sleep(.15)
+            stopped = await evaluate("({count:Number(document.querySelector('.space-home').dataset.soundEffectCount),context:document.querySelector('.space-home').dataset.audioContext,active:document.querySelector('.space-home').dataset.soundActive})")
+        assert stopped['count']==keyboard and stopped['active']=='false' and stopped['context']=='suspended', stopped
+        result['audio']={'default_off':True,'explicit_activation_played':True,'muted_hover':muted,'active_hover':hover,'keyboard_tap_count':keyboard,'disabled_sound':stopped}
         await call('Emulation.setEmulatedMedia', {'features':[{'name':'prefers-reduced-motion','value':'reduce'}]})
         await asyncio.sleep(.4)
         reduced = await evaluate("({frame:Number(document.querySelector('canvas').dataset.frame),motion:document.querySelector('canvas').dataset.motion})")
+        assert await evaluate("document.querySelector('.motion-toggle').disabled")
+        await evaluate("document.querySelector('.motion-toggle').click()", True)
         await asyncio.sleep(.5)
         assert reduced['motion']=='paused' and reduced['frame']==await evaluate("Number(document.querySelector('canvas').dataset.frame)")
         result['reduced_motion']=reduced
         await call('Emulation.setEmulatedMedia', {'features':[{'name':'prefers-reduced-motion','value':'no-preference'}]})
-        forced = await call('Page.addScriptToEvaluateOnNewDocument', {'source':"const original=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext=function(kind,...rest){return kind.startsWith('webgl')?null:original.call(this,kind,...rest);};"})
+        forced = await call('Page.addScriptToEvaluateOnNewDocument', {'source':"const original=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext=function(kind,...rest){return kind.includes('webgl')?null:original.call(this,kind,...rest);};"})
         await call('Page.navigate', {'url':args.origin+'/'})
         await asyncio.sleep(2)
         fallback = await evaluate("({renderer:document.querySelector('canvas').dataset.renderer,frame:Number(document.querySelector('canvas').dataset.frame),motion:document.querySelector('canvas').dataset.motion})")
@@ -105,6 +131,7 @@ async def main():
         await call('Page.removeScriptToEvaluateOnNewDocument', {'identifier':forced['identifier']})
         await call('Emulation.setDeviceMetricsOverride', {'width':1440,'height':900,'deviceScaleFactor':1,'mobile':False})
         await call('Page.navigate', {'url':args.origin+'/'})
+        await call('Emulation.clearDeviceMetricsOverride')
         Path(args.output).parent.mkdir(parents=True, exist_ok=True)
         Path(args.output).write_text(json.dumps(result,indent=2)+'\n')
         print(json.dumps(result,indent=2),flush=True)

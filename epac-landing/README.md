@@ -1,20 +1,25 @@
-# ePAC — portada espacial conservada
+# ePAC — portada espacial
 
-Una sola pantalla negra con el wordmark circular ePAC. centrado y copyright discreto, conservando la portada pública elegida por el usuario. Se mejora el campo estelar con una escena Three.js verdadera: profundidad perspectiva, movimiento basado en tiempo, parallax sutil, estelas cercanas discretas y fallback Canvas2D. No hay paisajes costeros, casas, slogans nuevos, paneles o scrolling.
+Una sola pantalla negra con estrellas en avance, logo ePAC. central y copyright discreto. No hay scrolling, nuevas secciones, slogans, casas o paisajes. Se conserva la marca aprobada; srcset 640/960/1920 elige una versión adecuada sin recortar o rediseñar el logo.
 
-El logo original se conserva; la restauración de nitidez validada es un derivado 1920×1920 convertido a WebP lossless. SOURCES.md registra su procedencia y la distinción entre original y restauración. Los controles discretos permiten pausar la escena y activar el audio original; no hay autoplay de audio. Respeta reduced motion y pestañas ocultas.
+## Interacción y carga
 
-## Desarrollo
+Active el icono de sonido para escuchar la pista ambiental existente. Después, pasar el cursor por el logo produce un whoosh espacial sutil; el movimiento modifica su posición estéreo/filtro y salir lo desvanece. El logo admite foco/activación por teclado y toque. Ni hover ni toque del logo activan audio sin consentimiento. Desactivar sonido u ocultar la pestaña silencia también los efectos.
+
+Los efectos son Web Audio procedural y no necesitan un archivo extra. El motor WebGL nativo conserva la perspectiva y el vuelo 3D con dos draw calls, sustituyendo la biblioteca pesada en la ruta activa. Sigue habiendo fallback Canvas2D, pausa estable, reduced motion y adaptación DPR móvil. PERF.md registra payloads antes/después sin prometer tiempos o fps no medidos.
+
+## Desarrollo y pruebas
 
 ```bash
 corepack pnpm install --frozen-lockfile
 pnpm dev
 pnpm check
 pnpm build
+python3 tools/measure-initial-payload.py --output QA-evidence/payload-current.json
 ```
 
-React, TypeScript, Vite, Three.js y GSAP. El build renderiza HTML estático, y sólo conserva en dist/media la pista espacial utilizada, sin borrar los recursos originales de public. La única ruta está en public/manus-routes.json. La escena se adapta a viewport y DPR; no requiere un archivo MP4 ni superresolución para dibujar las estrellas.
+La prueba tools/verify-space-runtime.py se conecta al navegador Sandbox existente (no lanza otro), comprueba tamaños/layout/vuelo/pausa/fallback y sonido sin consentimiento, hover autorizado y apagado. El build renderiza HTML estático, conserva sólo el audio espacial activo en dist/media y no borra fuentes o archivos históricos.
 
 ## Publicación
 
-Destino: https://e-pac.ai. GitHub Pages usa epac-hub/e-pac.ai, main y raíz. Preservar CNAME, 404, logos originales y directorios históricos. El código editable se guarda en epac-landing y el build se copia a la raíz. Integrar cambios remotos sin force-push y verificar commit exacto, HTML, assets HTTPS y movimiento real. QA_SPACE.md documenta la evidencia de esta versión.
+https://e-pac.ai mediante epac-hub/e-pac.ai, GitHub Pages main/raíz. Preservar CNAME, 404, logos originales e históricos. Código editable en epac-landing. QA_INTERACTIVE.md y PERF.md documentan la versión; no confundir Preview/checkpoint con publicación confirmada.

@@ -24,6 +24,10 @@ export function useMotion() {
   }, []);
 
   const toggle = useCallback(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setEnabled(false);
+      return;
+    }
     setEnabled((previous) => {
       const next = !previous;
       try { localStorage.setItem('epac-motion', next ? 'on' : 'off'); } catch { /* Controls still work without persistence. */ }

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
 
 type StarFlightProps = {
   enabled: boolean;
@@ -21,10 +20,31 @@ type FlightRenderer = {
   dispose: () => void;
 };
 
+type WebGLProgramInfo = {
+  program: WebGLProgram;
+  attributes: {
+    position: number;
+    phase: number;
+    depth: number;
+    alpha: number;
+  };
+  uniforms: {
+    time: WebGLUniformLocation;
+    perspective: WebGLUniformLocation;
+    projectionDepth: WebGLUniformLocation;
+    aspectScale: WebGLUniformLocation;
+    camera: WebGLUniformLocation;
+    pixelRatio?: WebGLUniformLocation;
+  };
+};
+
 const FAR_DISTANCE = 165;
 const NEAR_DISTANCE = 2.25;
+const CAMERA_NEAR = 0.1;
+const CAMERA_FAR = 175;
 const FLIGHT_SPEED = 0.052;
 const FIELD_OF_VIEW = 52;
+const VERTEX_STRIDE = 5 * Float32Array.BYTES_PER_ELEMENT;
 
 function clamp(value: number, minimum: number, maximum: number) {
   return Math.min(maximum, Math.max(minimum, value));
@@ -39,7 +59,8 @@ function getMetrics(canvas: HTMLCanvasElement) {
   const width = Math.max(1, Math.round(bounds.width || window.innerWidth));
   const height = Math.max(1, Math.round(bounds.height || window.innerHeight));
   const mobile = isMobileViewport(width);
-  const pixelRatio = Math.min(mobile ? 1.5 : 2, Math.max(1, window.devicePixelRatio || 1));
+  // Reducimos solo el tope DPR móvil de 1.5 a 1.25 para aligerar la rasterización.
+  const pixelRatio = Math.min(mobile ? 1.25 : 2, Math.max(1, window.devicePixelRatio || 1));
 
   return { width, height, mobile, pixelRatio };
 }
@@ -75,6 +96,118 @@ function createStars(width: number, height: number, mobile: boolean) {
   return stars;
 }
 
+function getContextGL(canvas: HTMLCanvasElement) {
+  const attributes: WebGLContextAttributes = {
+    alpha: false,
+    antialias: false,
+    powerPreference: 'high-performance',
+  };
+
+  return (
+    (canvas.getContext('webgl', attributes) as WebGLRenderingContext | null)
+    ?? (canvas.getContext('experimental-webgl', attributes) as WebGLRenderingContext | null)
+  );
+}
+
+function compileShader(gl: WebGLRenderingContext, type: number, source: string) {
+  const shader = gl.createShader(type);
+  if (!shader) throw new Error('No se pudo crear el shader WebGL.');
+
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    const message = gl.getShaderInfoLog(shader) || 'Error de compilación WebGL.';
+    gl.deleteShader(shader);
+    throw new Error(message);
+  }
+
+  return shader;
+}
+
+function createProgram(gl: WebGLRenderingContext, vertexSource: string, fragmentSource: string) {
+  let vertexShader: WebGLShader | null = null;
+  let fragmentShader: WebGLShader | null = null;
+  let program: WebGLProgram | null = null;
+
+  try {
+    vertexShader = compileShader(gl, gl.VERTEX_SHADER, vertexSource);
+    fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
+    program = gl.createProgram();
+    if (!program) throw new Error('No se pudo crear el programa WebGL.');
+
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      throw new Error(gl.getProgramInfoLog(program) || 'Error de enlace WebGL.');
+    }
+
+    return program;
+  } catch (error) {
+    if (program) gl.deleteProgram(program);
+    throw error;
+  } finally {
+    if (vertexShader) gl.deleteShader(vertexShader);
+    if (fragmentShader) gl.deleteShader(fragmentShader);
+  }
+}
+
+function requireAttribute(gl: WebGLRenderingContext, program: WebGLProgram, name: string) {
+  const location = gl.getAttribLocation(program, name);
+  if (location < 0) throw new Error(`Atributo WebGL no encontrado: ${name}`);
+  return location;
+}
+
+function requireUniform(gl: WebGLRenderingContext, program: WebGLProgram, name: string) {
+  const location = gl.getUniformLocation(program, name);
+  if (!location) throw new Error(`Uniform WebGL no encontrado: ${name}`);
+  return location;
+}
+
+function createProgramInfo(
+  gl: WebGLRenderingContext,
+  vertexSource: string,
+  fragmentSource: string,
+  points: boolean,
+): WebGLProgramInfo {
+  const program = createProgram(gl, vertexSource, fragmentSource);
+
+  try {
+    return {
+      program,
+      attributes: {
+        position: requireAttribute(gl, program, 'aPosition'),
+        phase: requireAttribute(gl, program, 'aPhase'),
+        depth: requireAttribute(gl, program, points ? 'aSize' : 'aTail'),
+        alpha: requireAttribute(gl, program, 'aAlpha'),
+      },
+      uniforms: {
+        time: requireUniform(gl, program, 'uTime'),
+        perspective: requireUniform(gl, program, 'uPerspective'),
+        projectionDepth: requireUniform(gl, program, 'uProjectionDepth'),
+        aspectScale: requireUniform(gl, program, 'uAspectScale'),
+        camera: requireUniform(gl, program, 'uCamera'),
+        ...(points ? { pixelRatio: requireUniform(gl, program, 'uPixelRatio') } : {}),
+      },
+    };
+  } catch (error) {
+    gl.deleteProgram(program);
+    throw error;
+  }
+}
+
+function bindAttributes(gl: WebGLRenderingContext, info: WebGLProgramInfo, buffer: WebGLBuffer) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.enableVertexAttribArray(info.attributes.position);
+  gl.vertexAttribPointer(info.attributes.position, 2, gl.FLOAT, false, VERTEX_STRIDE, 0);
+  gl.enableVertexAttribArray(info.attributes.phase);
+  gl.vertexAttribPointer(info.attributes.phase, 1, gl.FLOAT, false, VERTEX_STRIDE, 2 * Float32Array.BYTES_PER_ELEMENT);
+  gl.enableVertexAttribArray(info.attributes.depth);
+  gl.vertexAttribPointer(info.attributes.depth, 1, gl.FLOAT, false, VERTEX_STRIDE, 3 * Float32Array.BYTES_PER_ELEMENT);
+  gl.enableVertexAttribArray(info.attributes.alpha);
+  gl.vertexAttribPointer(info.attributes.alpha, 1, gl.FLOAT, false, VERTEX_STRIDE, 4 * Float32Array.BYTES_PER_ELEMENT);
+}
+
 function createWebGLRenderer(
   canvas: HTMLCanvasElement,
   width: number,
@@ -82,69 +215,98 @@ function createWebGLRenderer(
   pixelRatio: number,
   mobile: boolean,
 ): FlightRenderer | null {
-  let renderer: THREE.WebGLRenderer | null = null;
-  let starGeometry: THREE.BufferGeometry | null = null;
-  let streakGeometry: THREE.BufferGeometry | null = null;
-  let starMaterial: THREE.ShaderMaterial | null = null;
-  let streakMaterial: THREE.ShaderMaterial | null = null;
+  const gl = getContextGL(canvas);
+  if (!gl) return null;
+
+  let starsBuffer: WebGLBuffer | null = null;
+  let streaksBuffer: WebGLBuffer | null = null;
+  let starsProgram: WebGLProgramInfo | null = null;
+  let streaksProgram: WebGLProgramInfo | null = null;
 
   try {
-    renderer = new THREE.WebGLRenderer({
-      canvas,
-      alpha: false,
-      antialias: false,
-      powerPreference: 'high-performance',
-    });
-    renderer.setClearColor(0x000000, 1);
-    renderer.setPixelRatio(pixelRatio);
-    renderer.setSize(width, height, false);
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(FIELD_OF_VIEW, width / height, 0.1, FAR_DISTANCE + 10);
     const stars = createStars(width, height, mobile);
-    const positions = new Float32Array(stars.length * 3);
-    const phases = new Float32Array(stars.length);
-    const sizes = new Float32Array(stars.length);
-    const alphas = new Float32Array(stars.length);
+    const starsData = new Float32Array(stars.length * 5);
+    const streaks = stars.filter((star) => star.streak);
+    const streaksData = new Float32Array(streaks.length * 2 * 5);
 
     stars.forEach((star, index) => {
-      const offset = index * 3;
-      positions[offset] = star.x;
-      positions[offset + 1] = star.y;
-      phases[index] = star.phase;
-      sizes[index] = star.size;
-      alphas[index] = star.alpha;
+      const offset = index * 5;
+      starsData[offset] = star.x;
+      starsData[offset + 1] = star.y;
+      starsData[offset + 2] = star.phase;
+      starsData[offset + 3] = star.size;
+      starsData[offset + 4] = star.alpha;
     });
 
-    starGeometry = new THREE.BufferGeometry();
-    starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    starGeometry.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
-    starGeometry.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
-    starGeometry.setAttribute('aAlpha', new THREE.BufferAttribute(alphas, 1));
+    streaks.forEach((star, index) => {
+      const head = index * 10;
+      const tail = head + 5;
+      streaksData[head] = star.x;
+      streaksData[head + 1] = star.y;
+      streaksData[head + 2] = star.phase;
+      streaksData[head + 4] = star.alpha * 0.42;
+      streaksData[tail] = star.x;
+      streaksData[tail + 1] = star.y;
+      streaksData[tail + 2] = star.phase;
+      streaksData[tail + 3] = 1;
+      streaksData[tail + 4] = star.alpha * 0.42;
+    });
 
-    starMaterial = new THREE.ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      depthTest: false,
-      uniforms: { uTime: { value: 0 }, uPixelRatio: { value: pixelRatio } },
-      vertexShader: `
-        uniform float uTime;
+    starsBuffer = gl.createBuffer();
+    streaksBuffer = gl.createBuffer();
+    if (!starsBuffer || !streaksBuffer) throw new Error('No se pudieron crear los buffers WebGL.');
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, starsBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, starsData, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, streaksBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, streaksData, gl.STATIC_DRAW);
+
+    const sharedVertex = `
+      uniform float uTime;
+      uniform vec2 uPerspective;
+      uniform vec2 uProjectionDepth;
+      uniform float uAspectScale;
+      uniform vec2 uCamera;
+      attribute vec2 aPosition;
+      attribute float aPhase;
+      attribute float aAlpha;
+      varying float vAlpha;
+
+      vec3 flightPosition(float distance) {
+        return vec3(
+          aPosition.x * uAspectScale - uCamera.x,
+          aPosition.y - uCamera.y,
+          -distance
+        );
+      }
+
+      vec4 projectPerspective(vec3 viewPosition) {
+        return vec4(
+          viewPosition.x * uPerspective.x,
+          viewPosition.y * uPerspective.y,
+          viewPosition.z * uProjectionDepth.x + uProjectionDepth.y,
+          -viewPosition.z
+        );
+      }
+    `;
+
+    starsProgram = createProgramInfo(
+      gl,
+      `${sharedVertex}
         uniform float uPixelRatio;
-        attribute float aPhase;
         attribute float aSize;
-        attribute float aAlpha;
-        varying float vAlpha;
 
         void main() {
           float progress = fract(aPhase + uTime * ${FLIGHT_SPEED.toFixed(3)});
           float distance = mix(${FAR_DISTANCE.toFixed(1)}, ${NEAR_DISTANCE.toFixed(2)}, progress);
-          vec4 viewPosition = modelViewMatrix * vec4(position.xy, -distance, 1.0);
-          gl_Position = projectionMatrix * viewPosition;
+          vec3 viewPosition = flightPosition(distance);
+          gl_Position = projectPerspective(viewPosition);
           gl_PointSize = clamp(aSize * (0.85 + progress * 1.40) * 115.0 / -viewPosition.z, 1.0, 3.30) * uPixelRatio;
           vAlpha = aAlpha * (0.70 + progress * 0.25);
         }
       `,
-      fragmentShader: `
+      `
+        precision mediump float;
         varying float vAlpha;
 
         void main() {
@@ -156,60 +318,24 @@ function createWebGLRenderer(
           gl_FragColor = vec4(vec3(1.0), alpha);
         }
       `,
-    });
+      true,
+    );
 
-    const points = new THREE.Points(starGeometry, starMaterial);
-    points.frustumCulled = false;
-    scene.add(points);
-
-    const streaks = stars.filter((star) => star.streak);
-    const streakPositions = new Float32Array(streaks.length * 2 * 3);
-    const streakPhases = new Float32Array(streaks.length * 2);
-    const streakTails = new Float32Array(streaks.length * 2);
-    const streakAlphas = new Float32Array(streaks.length * 2);
-
-    streaks.forEach((star, index) => {
-      const vertex = index * 2;
-      const positionOffset = vertex * 3;
-      streakPositions[positionOffset] = star.x;
-      streakPositions[positionOffset + 1] = star.y;
-      streakPositions[positionOffset + 3] = star.x;
-      streakPositions[positionOffset + 4] = star.y;
-      streakPhases[vertex] = star.phase;
-      streakPhases[vertex + 1] = star.phase;
-      streakTails[vertex + 1] = 1;
-      streakAlphas[vertex] = star.alpha * 0.42;
-      streakAlphas[vertex + 1] = star.alpha * 0.42;
-    });
-
-    streakGeometry = new THREE.BufferGeometry();
-    streakGeometry.setAttribute('position', new THREE.BufferAttribute(streakPositions, 3));
-    streakGeometry.setAttribute('aPhase', new THREE.BufferAttribute(streakPhases, 1));
-    streakGeometry.setAttribute('aTail', new THREE.BufferAttribute(streakTails, 1));
-    streakGeometry.setAttribute('aAlpha', new THREE.BufferAttribute(streakAlphas, 1));
-
-    streakMaterial = new THREE.ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      depthTest: false,
-      uniforms: { uTime: { value: 0 } },
-      vertexShader: `
-        uniform float uTime;
-        attribute float aPhase;
+    streaksProgram = createProgramInfo(
+      gl,
+      `${sharedVertex}
         attribute float aTail;
-        attribute float aAlpha;
-        varying float vAlpha;
 
         void main() {
           float progress = fract(aPhase + uTime * ${FLIGHT_SPEED.toFixed(3)});
           float distance = mix(${FAR_DISTANCE.toFixed(1)}, ${NEAR_DISTANCE.toFixed(2)}, progress);
           distance += aTail * (0.55 + progress * 3.25);
-          vec4 viewPosition = modelViewMatrix * vec4(position.xy, -distance, 1.0);
-          gl_Position = projectionMatrix * viewPosition;
+          gl_Position = projectPerspective(flightPosition(distance));
           vAlpha = aAlpha * smoothstep(0.58, 0.96, progress);
         }
       `,
-      fragmentShader: `
+      `
+        precision mediump float;
         varying float vAlpha;
 
         void main() {
@@ -217,47 +343,76 @@ function createWebGLRenderer(
           gl_FragColor = vec4(vec3(1.0), vAlpha);
         }
       `,
-    });
+      false,
+    );
 
-    const lines = new THREE.LineSegments(streakGeometry, streakMaterial);
-    lines.frustumCulled = false;
-    scene.add(lines);
+    const baseAspect = width / Math.max(1, height);
+    const focalScale = 1 / Math.tan((FIELD_OF_VIEW * Math.PI) / 360);
+    const projectionDepthA = -(CAMERA_FAR + CAMERA_NEAR) / (CAMERA_FAR - CAMERA_NEAR);
+    const projectionDepthB = (-2 * CAMERA_FAR * CAMERA_NEAR) / (CAMERA_FAR - CAMERA_NEAR);
+    let drawWidth = width;
+    let drawHeight = height;
+    let drawPixelRatio = pixelRatio;
+
+    const resize = (nextWidth: number, nextHeight: number, nextPixelRatio: number) => {
+      drawWidth = nextWidth;
+      drawHeight = nextHeight;
+      drawPixelRatio = nextPixelRatio;
+      canvas.width = Math.max(1, Math.round(drawWidth * drawPixelRatio));
+      canvas.height = Math.max(1, Math.round(drawHeight * drawPixelRatio));
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+
+    const setSharedUniforms = (info: WebGLProgramInfo, elapsed: number, parallaxX: number, parallaxY: number) => {
+      const aspect = drawWidth / Math.max(1, drawHeight);
+      gl.uniform1f(info.uniforms.time, elapsed);
+      gl.uniform2f(info.uniforms.perspective, focalScale / aspect, focalScale);
+      gl.uniform2f(info.uniforms.projectionDepth, projectionDepthA, projectionDepthB);
+      gl.uniform1f(info.uniforms.aspectScale, aspect / baseAspect);
+      gl.uniform2f(info.uniforms.camera, parallaxX * 0.38, -parallaxY * 0.28);
+    };
+
+    gl.clearColor(0, 0, 0, 1);
+    gl.disable(gl.DEPTH_TEST);
+    gl.depthMask(false);
+    gl.enable(gl.BLEND);
+    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    resize(width, height, pixelRatio);
 
     return {
       kind: 'webgl',
-      resize(nextWidth, nextHeight, nextPixelRatio) {
-        camera.aspect = nextWidth / Math.max(1, nextHeight);
-        const aspectScale = camera.aspect / (width / height);
-        points.scale.x = aspectScale;
-        lines.scale.x = aspectScale;
-        camera.updateProjectionMatrix();
-        if (starMaterial) starMaterial.uniforms.uPixelRatio.value = nextPixelRatio;
-        renderer?.setPixelRatio(nextPixelRatio);
-        renderer?.setSize(nextWidth, nextHeight, false);
-      },
+      resize,
       render(elapsed, parallaxX, parallaxY) {
-        if (!renderer || !starMaterial || !streakMaterial) return;
-        camera.position.set(parallaxX * 0.38, -parallaxY * 0.28, 0);
-        camera.updateMatrixWorld();
-        starMaterial.uniforms.uTime.value = elapsed;
-        streakMaterial.uniforms.uTime.value = elapsed;
-        renderer.render(scene, camera);
+        if (!starsBuffer || !streaksBuffer || !starsProgram || !streaksProgram) return;
+
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.useProgram(starsProgram.program);
+        setSharedUniforms(starsProgram, elapsed, parallaxX, parallaxY);
+        gl.uniform1f(starsProgram.uniforms.pixelRatio!, drawPixelRatio);
+        bindAttributes(gl, starsProgram, starsBuffer);
+        gl.drawArrays(gl.POINTS, 0, stars.length);
+
+        gl.useProgram(streaksProgram.program);
+        setSharedUniforms(streaksProgram, elapsed, parallaxX, parallaxY);
+        bindAttributes(gl, streaksProgram, streaksBuffer);
+        gl.drawArrays(gl.LINES, 0, streaks.length * 2);
       },
       dispose() {
-        scene.remove(points, lines);
-        starGeometry?.dispose();
-        streakGeometry?.dispose();
-        starMaterial?.dispose();
-        streakMaterial?.dispose();
-        renderer?.dispose();
+        if (starsBuffer) gl.deleteBuffer(starsBuffer);
+        if (streaksBuffer) gl.deleteBuffer(streaksBuffer);
+        if (starsProgram) gl.deleteProgram(starsProgram.program);
+        if (streaksProgram) gl.deleteProgram(streaksProgram.program);
+        starsBuffer = null;
+        streaksBuffer = null;
+        starsProgram = null;
+        streaksProgram = null;
       },
     };
   } catch {
-    starGeometry?.dispose();
-    streakGeometry?.dispose();
-    starMaterial?.dispose();
-    streakMaterial?.dispose();
-    renderer?.dispose();
+    if (starsBuffer) gl.deleteBuffer(starsBuffer);
+    if (streaksBuffer) gl.deleteBuffer(streaksBuffer);
+    if (starsProgram) gl.deleteProgram(starsProgram.program);
+    if (streaksProgram) gl.deleteProgram(streaksProgram.program);
     return null;
   }
 }
