@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import time
 import urllib.request
@@ -17,7 +18,8 @@ expected = Path(args.html).read_bytes()
 deadline = time.monotonic() + 240
 last = None
 while time.monotonic() < deadline:
-    build = json.loads(subprocess.check_output(['gh', 'api', 'repos/epac-hub/e-pac.ai/pages/builds/latest']))
+    raw = subprocess.check_output(['gh', 'api', 'repos/epac-hub/e-pac.ai/pages/builds/latest']).decode()
+    build = json.loads(re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', raw))
     key = (build.get('status'), build.get('commit'))
     if key != last:
         print(f"Pages: status={key[0]} commit={key[1]}", flush=True)

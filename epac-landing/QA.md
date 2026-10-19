@@ -38,7 +38,7 @@ El análisis temporal del clip generado encontró luz animada pero cámara fija.
 - [x] Revisión solo lectura integrada; fallback sin IntersectionObserver corregido para pausa fuera de vista.
 - [x] Preferencias, foco visible, skip link, controles semánticos y diálogo de procedencia conservados.
 - [x] Audio opt-in activado por gesto de diagnóstico; ninguna clave se incorpora al cliente.
-- [ ] Publicación del commit exacto y contenido HTTPS de e-pac.ai: pendiente de confirmación externa.
+- [x] Publicación confirmada: GitHub Pages construyó 3c4ee0f454a35e7ccecf15b395b72a027d9c027b. El HTML de https://e-pac.ai/ coincide byte por byte con dist/index.html; SHA256 a8b451e8f13dde16a3106d34ca3d4194ef903eae3ced888981a27e098a4b20a9. Ambos WebM, poster, landing/ y experience/ devolvieron HTTP 200. CNAME y rutas históricas permanecen intactos.
 
 ## Descripción de visualizaciones
 No hay gráficos estadísticos, KPIs ni resultados de negocio. Todos los elementos son decorativos o estados de navegación.
