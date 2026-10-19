@@ -16,10 +16,10 @@
 <style>
 /* One screen, nothing scrolls: film behind, the name in front, one line under it. */
 :root {
-  --ink: #07060d;
-  --paper: #f2eefc;
-  --mist: #a69fc0;
-  --amber: #f2a65e;
+  --ink: #000;
+  --paper: #fff;
+  --mist: #9a9a9a;
+  --accent: #fff;
   color-scheme: dark;
 }
 html, body { height: 100%; }
@@ -29,11 +29,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 .film, .shade { position: fixed; inset: 0; width: 100%; height: 100%; }
-.film { object-fit: cover; transform: scale(1.06); animation: drift 24s ease-out forwards; }
+.film { object-fit: cover; filter: grayscale(1) contrast(1.15) brightness(.85); transform: scale(1.06); animation: drift 24s ease-out forwards; }
 .shade {
   background:
-    radial-gradient(ellipse at center, rgba(7,6,13,.15) 0%, rgba(7,6,13,.75) 75%),
-    linear-gradient(to top, rgba(7,6,13,.85), transparent 45%);
+    radial-gradient(ellipse at center, rgba(0,0,0,.15) 0%, rgba(0,0,0,.78) 75%),
+    linear-gradient(to top, rgba(0,0,0,.88), transparent 45%);
 }
 main {
   position: relative; height: 100%; display: grid; place-items: center;
@@ -44,7 +44,7 @@ h1 {
   font-size: clamp(5.5rem, 26vw, 17rem); line-height: .9; letter-spacing: -.02em;
   opacity: 0; animation: rise 1.8s cubic-bezier(.2,.7,.2,1) .3s forwards;
 }
-h1 span, p i { color: var(--amber); }
+h1 span, p i { color: var(--accent); }
 p i { font-style: normal; }
 p b { font-weight: 400; white-space: nowrap; }
 p {
