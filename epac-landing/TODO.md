@@ -1,0 +1,9 @@
+# ePAC — corrección solicitada 10-19-2026
+
+- [x] Claridad y minimalismo: identidad ePAC y Elliot Pacheco Beauchamp inmediatas; texto breve y legible, alto contraste, espacio intencional, menos secciones y navegación simple. Retirar catálogo de nueve efectos y tarjetas de proveedores de la portada, conservando trazabilidad discreta.
+- [x] Cine real: película Seedance visible a pantalla completa, no bajo una capa que la vuelva imperceptible; escena narrativa Higgsfield; revisión privada Gemini ejecutada. Poster real, reproducción muted/playsInline y recuperación play cuando autoplay no sea posible. El nombre de un proveedor no sustituye evidencia de uso.
+- [x] Cursor y botones: dot + ring + glow trail, mix-blend-difference y crecimiento según estado; CTAs magnéticos con elastic spring-back y brillo interno. Integrados en el recorrido, no solo listados.
+- [x] WebGL: icosaedro distorsionado que sigue al cursor en una escena secundaria, 2000 estrellas GPU con impulso al scroll, fondo GLSL simplex en superficie oscura. WebGL no tapa el cine ni el texto; no pesado en móvil.
+- [x] Recorrido: áreas movidas horizontalmente por scroll vertical, tres pasos fijados con cambio visible y portales circulares sobre capas decorativas. Nunca ocultar texto de secciones enteras. Fallback natural móvil/reduced-motion; sin scroll trapping ni huecos gigantes.
+- [x] Audio y accesibilidad: soundtrack espacial AI existente opt-in con fade-in/out, controles visibles, pause por pestaña oculta. Preferencias reduced-motion, foco visible, enlaces funcionales y contenido estático significativo.
+- [x] Verificación y entrega: typecheck/build, revisión solo lectura y visual dirigida. Publicar sobre e-pac.ai conservando CNAME, rutas históricas y Git; confirmar Pages del commit y contenido/medios HTTPS. Sin métricas ni afirmaciones de cumplimiento inventadas.

@@ -1,0 +1,34 @@
+{
+  "commit": "3c4ee0f454a35e7ccecf15b395b72a027d9c027b",
+  "pages_status": "built",
+  "url": "https://e-pac.ai/",
+  "html_sha256": "a8b451e8f13dde16a3106d34ca3d4194ef903eae3ced888981a27e098a4b20a9",
+  "html_matches_local": true,
+  "assets": [
+    {
+      "path": "/media/epac-cinematic.webm",
+      "status": 200,
+      "type": "video/webm"
+    },
+    {
+      "path": "/media/higgsfield.webm",
+      "status": 200,
+      "type": "video/webm"
+    },
+    {
+      "path": "/media/epac-cinematic-poster.webp",
+      "status": 200,
+      "type": "image/webp"
+    },
+    {
+      "path": "/landing/",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/experience/",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    }
+  ]
+}
