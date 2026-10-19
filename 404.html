@@ -119,7 +119,7 @@ footer {
     s.z = s.pz = far ? 1 : Math.random() * .9 + .1;
     return s;
   };
-  const stars = Array.from({ length: 900 }, () => spawn({}));
+  const stars = Array.from({ length: 1600 }, () => spawn({}));
 
   const t0 = performance.now();
   let px = 0, py = 0, tx = 0, ty = 0;
@@ -128,7 +128,7 @@ footer {
   const mark = document.querySelector('.mark');
   const frame = now => {
     const t = (now - t0) / 1000;
-    const speed = .0022;
+    const speed = .0035;
     px += (tx - px) * .05; py += (ty - py) * .05;
 
     x.globalCompositeOperation = 'destination-out';
