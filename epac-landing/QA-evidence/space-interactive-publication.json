@@ -1,0 +1,64 @@
+{
+  "commit": "68446e7cceab282afc62c066a2009743863e85f9",
+  "pages_status": "built",
+  "url": "https://e-pac.ai/",
+  "html_sha256": "b7168083dc769bb04adda88a4fd856fac9dde92996d9e44f224134a3ca1f3c43",
+  "html_matches_local": true,
+  "assets": [
+    {
+      "path": "/brand/epac-logo-restored.webp",
+      "status": 200,
+      "type": "image/webp"
+    },
+    {
+      "path": "/brand/epac-logo-640.webp",
+      "status": 200,
+      "type": "image/webp"
+    },
+    {
+      "path": "/brand/epac-logo-960.webp",
+      "status": 200,
+      "type": "image/webp"
+    },
+    {
+      "path": "/brand/epac-logo-original.png",
+      "status": 200,
+      "type": "image/png"
+    },
+    {
+      "path": "/media/space-ambient.mp3",
+      "status": 200,
+      "type": "audio/mp3"
+    },
+    {
+      "path": "/manus-routes.json",
+      "status": 200,
+      "type": "application/json; charset=utf-8"
+    },
+    {
+      "path": "/landing/",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/experience/",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/assets/index-Bn_Gysm5.js",
+      "status": 200,
+      "type": "application/javascript; charset=utf-8"
+    },
+    {
+      "path": "/assets/react-runtime-Dkgty-vV.js",
+      "status": 200,
+      "type": "application/javascript; charset=utf-8"
+    },
+    {
+      "path": "/assets/index-O5TuahPM.css",
+      "status": 200,
+      "type": "text/css; charset=utf-8"
+    }
+  ]
+}

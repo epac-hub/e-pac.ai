@@ -14,7 +14,7 @@ Revisión 10-19-2026. Se conserva la portada espacial de e-pac.ai: logo ePAC. or
 | Movimiento reducido | Escena pausada; control deshabilitado y activarlo no cambia frame. Se corrigió la posibilidad previa de reanudar bajo preferencia reducida |
 | Fallback | WebGL forzado a no disponible: Canvas2D animado y funcional |
 | Carga inicial | PERF.md y JSON registran reducción del grafo JS inicial con el mismo método gzip; logos responsivos. No se mide ni promete porcentaje de tiempo/fps/Core Web Vitals |
-| Publicación | Pendiente hasta confirmar el commit exacto y el HTML/assets HTTPS de e-pac.ai |
+| Publicación | Confirmado commit 68446e7cceab282afc62c066a2009743863e85f9: HTML idéntico a dist, assets HTTPS 200; dominio abierto y canvas avanzó de frame 1093 a 1135; efecto del logo inició tras consentimiento |
 
 ## Descripción de la visualización
 

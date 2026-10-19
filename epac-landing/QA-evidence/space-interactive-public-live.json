@@ -1,0 +1,18 @@
+{
+  "url": "https://e-pac.ai/",
+  "initial": {
+    "loaded": true,
+    "source": "https://e-pac.ai/brand/epac-logo-640.webp",
+    "frame": 1093,
+    "renderer": "webgl",
+    "motion": "playing",
+    "active": "false"
+  },
+  "frame_after": 1135,
+  "sound_after_consent": {
+    "count": 1,
+    "context": "running",
+    "active": "true"
+  },
+  "active_script": "/assets/index-Bn_Gysm5.js"
+}
