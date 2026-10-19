@@ -1,40 +1,57 @@
-# ePAC landing page QA — 10-18-2026
+# ePAC — QA de la corrección 10-19-2026
 
-## Verification evidence
-Strict TypeScript check and production client + server-side static-render build succeeded. The initial HTML contains the professional name, page narrative, all three creative-process names and all nine feature cards without executing JavaScript. All initial-HTML local asset references exist; the exact existing CNAME is included in the build. The single Home route manifest returns HTTP 200 JSON, and the Seedance MP4 returns HTTP 200 video/mp4 on preview.
+## Resultado visual e implementación
+La portada ya no presenta nueve tarjetas técnicas ni tres tarjetas promocionales de proveedores. El hero es una película original Seedance a pantalla completa, con ePAC dominante, nombre profesional visible y una acción principal. El recorrido alterna cine oscuro con biografía y contacto marfil de alto contraste. Se conservaron las nueve técnicas solicitadas como comportamientos, con trazabilidad discreta en el pie.
 
-A read-only implementation review identified and resolved: mobile GSAP motion instead of the static fallback; desktop no-motion panels remaining horizontal rather than stacked; hidden-tab playback for user-controlled dialog videos; missing initial Lenis overlay synchronization; and a WebP poster mislabeled PNG. The deployment procedure protects historical content and does not delete the target root.
+Se ejecutaron TypeScript estricto, compilación Vite y render estático React. Las referencias locales de HTML, poster, clips WebM/MP4 y CNAME original se comprobaron. No hay clientes, métricas, resultados ni testimonios inventados. La biografía declara contexto profesional proporcionado por el usuario.
 
-Actual preview browser measurements found two mounted WebGL canvases, no WebGL fallback, no page-width overflow, and the Seedance video loaded with readyState 4, advancing currentTime, and paused=false. Clicking Perspective revealed its content. Clicking Experience revealed all nine cards with clip-path none. The pinned sequence and focus indicator progressed to the final step/panel during navigation. These are observed checks, not a claim of full accessibility or performance conformance.
+## Evidencia de reproducción y scroll
+Se detectó un error real de decodificación H.264 en el navegador de prueba: PIPELINE_ERROR_DECODE. Un estado `playing` sin avance temporal no se aceptó como prueba. Se añadieron WebM/VP9 y MP4 alternativo. La comprobación CDP usó la pestaña existente activada, no un navegador nuevo ni una visibilidad simulada.
 
-## Google AI Studio / Gemini production review
-The reused private tools/visual-qa-gemini.py ran successfully against rendered desktop and mobile screenshots using Gemini. Observations concerned orbital overlap with metadata, low emphasis of microcopy, subtle starfield visibility, and viewport-edge cropping. The orbital framing and material were corrected, and coordinate text now has a translucent backing. The viewport-edge screenshot cut is not document clipping: the page continues below the captured viewport. No screen-reader or WCAG certification is claimed, and a static screenshot cannot prove motion or audio behavior.
+| Comprobación | Resultado observado |
+|---|---|
+| Film en pestaña activa | visibilityState visible; estado playing; paused false; readyState 4. |
+| Avance temporal del film | currentTime 2.935937 s → 5.0026 s en dos muestras separadas por dos segundos; no se usó Play film manual en esa ejecución. |
+| Pausa visual | paused true, poster visible, cero canvases WebGL y áreas en grid al apagar motion. |
+| Audio opt-in | aria-pressed true tras user gesture de diagnóstico; se volvió a apagar. No se declara una prueba auditiva de altavoces. |
+| Horizontal real | transform matrix(1,0,0,1,-605,0), indicador 02 / 04 en muestra de mitad de recorrido. |
+| Pasos fijados | Build. activo, 03 / 03 tras salto a la tercera fase. Se corrigió un reset incorrecto a 01 al entrar con un salto de navegación. |
+| Portales | clipPath none en contenido de focus/approach; clipPath circle(150% at 50% 50%) sólo en capa decorativa. |
+| Narrativa secundaria | Clip Higgsfield en estado playing al entrar a approach. |
+| Desbordamiento y altura | Sin desbordamiento horizontal del documento a 1280×1100; escenas fijadas de 1016px llenan el viewport útil bajo header de 84px. |
 
-## QA checklist
-- [x] Strict TypeScript check.
-- [x] Production build and meaningful statically rendered page body.
-- [x] All nine required feature cards, three actual production-tool workflows, local media and manifest.
-- [x] Desktop and mobile opening layouts reviewed; corrected orbital framing reviewed.
-- [x] No fabricated client logos, testimonials, metrics, credentials, policy or legal claims.
-- [x] Mobile/touch lighter fallback; reduced-motion and user-disabled natural content flow.
-- [x] Native dialog, visible focus styles, skip link, semantic controls and opt-in audio implemented.
-- [x] Actual Gemini screenshot review performed; provider key absent from browser code.
-- [x] Process dialog opened natively, focused its close control, fit the viewport, locked background scrolling and closed with Escape. Motion-off removed both WebGL canvases, retained clip-path none and stacked focus content as a grid.
-- [x] Soundtrack asset returns HTTP 200 audio/mpeg and decodes as MP3, 44.1 kHz stereo. Opt-in and fade logic inspected. The automated browser was document.visibilityState=hidden during the playback test, so the deliberate hidden-tab pause prevented a verified audible-playback result; no playback-success claim is made.
-- [x] GitHub Pages release 5a160b3da6e26be7446f7e1ba773a912313a9d1c built successfully with no reported build error. The public HTTPS page is byte-for-byte identical to the verified local compiled HTML (SHA256 44ed83e8e2eed9920cf489595b7aba5cab2c29c2057d332929e0bb79987a31b4). Domain configuration and historical content remain unchanged.
+Pruebas reproducibles: tools/verify-cinematic-runtime.py y tools/verify-scroll-runtime.py. Los JSON de resultados y el informe Gemini se conservan en QA-evidence. La prueba es de ese navegador/viewport, no cobertura universal.
 
-## Visualizations and their meaning
-There are no statistical graphs, dashboards or performance KPIs. The visual elements are decorative or navigational, not data representations.
+## Revisión visual de producción Gemini
+El script privado de Gemini se ejecutó sobre las capturas 1440×900 y 390×844. Señaló microcopy inferior pequeño, interferencia del reflejo con texto/CTA y predominio del logotipo sobre el motivo. Se aumentó el texto inferior móvil y se reforzó el fondo del CTA y la sombra del texto secundario sin ocultar la película. El logotipo dominante es intencional; no se adopta como requisito que el anillo tenga más jerarquía que ePAC. La ausencia de estrellas en el hero no es una omisión: el sistema de partículas se integra en focus, no sobre la película.
 
-| Visual | Description | Accuracy boundary |
+El análisis temporal del clip generado encontró luz animada pero cámara fija. Se añadió push/reframing digital continuo con FFmpeg; no se atribuye movimiento óptico al modelo. El poster se extrajo del clip editado. Capturas estáticas no prueban movimiento ni audio; por eso se comprobó avance temporal del video.
+
+## Checklist
+- [x] TypeScript estricto y build estático ejecutados sin errores.
+- [x] Identidad, contenido breve y retiro del catálogo técnico verificados en HTML/capturas.
+- [x] Nueva película Seedance generada, editada y reproducida con avance temporal observado.
+- [x] WebM y MP4 reales, poster auténtico, escena Higgsfield y soundtrack existente.
+- [x] Cursor, magnetismo, shader simplex, 2000 puntos GPU e icosaedro secundario inspeccionados.
+- [x] Horizontal, tercer paso y portales sin ocultamiento de contenido observados en runtime.
+- [x] Desktop/móvil revisados; contenido natural sin motion y WebGL no pesado en touch.
+- [x] Revisión solo lectura integrada; fallback sin IntersectionObserver corregido para pausa fuera de vista.
+- [x] Preferencias, foco visible, skip link, controles semánticos y diálogo de procedencia conservados.
+- [x] Audio opt-in activado por gesto de diagnóstico; ninguna clave se incorpora al cliente.
+- [ ] Publicación del commit exacto y contenido HTTPS de e-pac.ai: pendiente de confirmación externa.
+
+## Descripción de visualizaciones
+No hay gráficos estadísticos, KPIs ni resultados de negocio. Todos los elementos son decorativos o estados de navegación.
+
+| Visual | Descripción | Límite de interpretación |
 |---|---|---|
-| Orbital hero | Cursor-responsive distorted icosahedron with tilted orbital rings and a satellite. | Decorative brand imagery; not a model of a real planet or person. |
-| Cosmic starfield | Exactly 2,000 generated GPU points with scroll-responsive travel. | Particle count is an implementation parameter, not a business metric. |
-| GLSL background | Animated three-dimensional simplex-noise plum/violet color field. | Decorative atmosphere, no numeric interpretation. |
-| Four focus-area graphics | Stylized orbital/network geometry illustrates healthcare, enterprise, policy and technology. | Conceptual categories, not measured results or case studies. |
-| Focus progress line | Tracks the desktop horizontal-scroll narrative. | Calculated from ScrollTrigger progress; not a KPI. |
-| Numbered approach orbit | Shows the active step in a three-step positioning narrative. | Navigation state; the text describes an approach, not a performance claim. |
-| Sound bars | Indicate whether opt-in audio is playing. | Decorative state animation, not a spectrum analyzer. |
+| Película hero | Escultura ficticia, luz lavanda rotatoria y encuadre digital editado. | Arte de marca; no persona ni lugar real, ni prueba de desempeño. |
+| 2000 estrellas | Puntos GPU con impulso al scroll en el bloque de focus. | 2000 es parámetro de implementación, no métrica empresarial. |
+| Fondo GLSL | Campo simplex de tonos oscuros/lavanda animado. | Decorativo, sin significado numérico. |
+| Icosaedro secundario | Objeto distorsionado responsivo al cursor en approach. | Ilustración abstracta, no modelo científico o representación personal. |
+| Áreas y línea de progreso | Cuatro categorías profesionales y avance del scroll horizontal. | Estado de navegación, no KPI; progreso calculado por ScrollTrigger. |
+| 01–03 de enfoque | Paso actual de una narrativa de trabajo. | Posicionamiento profesional, no proceso auditado o resultado prometido. |
+| Barras de audio | Estado visual del soundtrack opt-in. | Animación indicativa, no analizador de espectro. |
 
-## Known limitations
-The heavy Three.js/R3F chunk is lazy-loaded only for fine-pointer desktop motion views and is approximately 245 KB gzip. No Core Web Vitals, low-end hardware frame rate, screen-reader coverage or formal WCAG conformance has been measured. The native email CTA opens the visitor's email application; it does not submit data to a server.
+## Límites
+No se afirma cumplimiento WCAG, métricas Core Web Vitals, frame rate en hardware de gama baja ni cobertura de lectores de pantalla. El bundle Three.js/R3F sigue lazy-load sólo para movimiento en desktop fine-pointer, con aviso de tamaño en el build. Autoplay depende de la política del navegador y dispone de recuperación Play film y poster. El correo abre el cliente de email del visitante, no envía un formulario a un servidor.

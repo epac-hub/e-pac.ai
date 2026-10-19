@@ -1,21 +1,18 @@
-# ePAC — Intelligence. With purpose.
+# ePAC — landing page cinematográfica minimalista
 
-Responsive cinematic landing page for Elliot Pacheco Beauchamp, using the user-provided professional context. React / TypeScript / Vite with GSAP, Lenis, React Three Fiber, Three.js, and custom GLSL.
+Corrección solicitada el 10-19-2026: película Seedance original visible a pantalla completa; perfil marfil breve; cuatro áreas conectadas; enfoque narrativo de tres pasos; contacto directo. Los efectos son comportamientos reales, no un catálogo de especificaciones. Los proveedores quedan en los detalles opcionales del pie.
 
-## Development and build
+## Desarrollo
+Node, Corepack y pnpm@11.25.0. Ejecutar `corepack pnpm install --frozen-lockfile`, `pnpm dev` en 0.0.0.0:3000. `pnpm check` ejecuta TypeScript estricto. `pnpm build` compila el cliente y el render estático significativo de React en dist/index.html.
 
-`corepack pnpm install --frozen-lockfile`
+src/App.tsx: contenido; src/styles.css: diseño responsivo; src/components/CinematicVideo.tsx: autoplay muted controlado por visibilidad y preferencias, fallback Play film; CosmicScene.tsx: shader/partículas e icosaedro secundario; InteractionControls.tsx: cursor/magnetismo/audio; usePageMotion.ts: scroll/portales decorativos/pins; public/media: recursos reales.
 
-`pnpm dev` starts the configured preview at port 3000. `pnpm check` runs TypeScript. `pnpm build` creates `dist/` and statically renders meaningful page content into its initial HTML. Browser hydration adds controls and motion.
+## Medios y verificaciones
+SOURCES.md documenta fuentes y distingue generación original de atribuciones declaradas por el repositorio. El film web incluye edición de encuadre digital; no se declara un movimiento óptico de cámara no observado. QA.md y QA-evidence contienen resultados ejecutados, con límites de capturas estáticas.
 
-No database, server credential or live generation API is required. Sound is opt-in. Heavy effects are desktop-only; user-disabled and reduced-motion views retain naturally stacked content.
+`tools/verify-cinematic-runtime.py` conecta al navegador Sandbox existente por CDP en 9222; nunca lanza un navegador adicional. Requiere Python y websockets y recibe `--origin` y `--output`. Comprueba pestaña visible, avance temporal, pausa/unmount de efectos y activación de audio con un user gesture de diagnóstico. `tools/visual-qa-gemini.py` requiere google-genai/GEMINI_API_KEY solo en el entorno privado; no expone claves en frontend. Las herramientas privadas no se ejecutan desde la web.
 
-## Media and production review
+## Publicación
+Sitio existente: epac-hub/e-pac.ai, GitHub Pages desde main/raíz, CNAME e-pac.ai. Copiar dist/. a la raíz sin borrar rutas históricas ni cambiar DNS/CNAME. Conservar fuente editable bajo epac-landing/. Revisar TypeScript/build, fuente, recursos, diff y cambios remotos antes de push. Confirmar Pages del commit exacto y HTML/medios públicos HTTPS: un push por sí solo no prueba la publicación.
 
-Seedance and Higgsfield clips and ambient audio are reused from epac-hub/e-pac.ai. Read SOURCES.md for the exact provenance and official references. `tools/visual-qa-gemini.py` is a production-only tool, requires the official google-genai SDK and a private GEMINI_API_KEY, and does not ship credentials to the browser. QA.md records actual execution and checks, not assumed conformance.
-
-## Existing custom-domain deployment
-
-The live repository is epac-hub/e-pac.ai. GitHub Pages serves main at repository root with CNAME `e-pac.ai`.
-
-Source for this new landing page is stored under `epac-landing/` in that repository. Its `dist/` output is copied into the repository root **without deleting historical files or directories**. Preserve CNAME, `landing/`, `experience/`, `galactic-demo/`, historical hashed assets, and existing Git history. Do not use a destructive root directory mirror. The root `index.html` becomes the new landing page. Its previous root `404.html` stays in place for legacy deep links. A normal verified commit/push triggers the existing Pages build; no DNS change is needed.
+No se añaden métricas, clientes, testimonios ni claims regulatorios inventados. El contexto profesional es proporcionado por el usuario.

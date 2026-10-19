@@ -5,12 +5,14 @@ ePAC, LLC — e-pac.ai
 
 | Ruta | Contenido |
 |---|---|
-| `index.html`, `assets/`, `media/`, `favicon.svg`, `og-image.png` | Current ePAC landing page, replaced on 10-18-2026; statically rendered React/TypeScript build. See `LANDING_PAGE.md`. |
+| `index.html`, `assets/`, `media/`, `favicon.svg`, `og-image.png` | Portada ePAC corregida el 10-19-2026: cine full-bleed, diseño minimalista marfil/oscuro y reproducción WebM/MP4 verificada. React/TypeScript con HTML estático significativo. |
 | `epac-landing/` | Editable source, pinned build toolchain, content/media provenance and QA for the current landing page. |
 | `404.html`, historical hashed assets, `manus-storage/` | Preserved previous site and deep-link fallback; no historical paths were deleted. |
 | `landing/` | Landing original de ePAC, LLC. |
 | `experience/` | Compilación de la experiencia interactiva generada desde `galactic-demo/`, con base `/e-pac.ai/experience/`. |
 | `galactic-demo/` | Código fuente React/TypeScript de la experiencia (ver `PRODUCTION_WORKFLOW.md`). |
+
+Las notas de `404.html` y del cargador `window.__EPAC_BASE__` siguientes describen el sitio histórico conservado, no el nuevo build de la raíz. El build actual y sus pruebas están documentados en `epac-landing/README.md` y `epac-landing/QA.md`.
 
 `404.html` es una copia de `index.html` para que GitHub Pages sirva las rutas internas (`/about`, `/work`, `/case-study/...`).
 

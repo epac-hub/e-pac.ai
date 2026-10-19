@@ -1,0 +1,21 @@
+Based on the provided desktop and mobile screenshots, here are the visible issues and precise corrections:
+
+### Direct Observations
+
+1. **Storytelling text contrast (Mobile):**
+   The tagline *"Intelligence. With purpose."* near the bottom is set in a very small font size and dark gray tone against the black reflection, resulting in poor legibility. Increase its size and font brightness.
+
+2. **Graphic occlusion and legibility (Mobile):**
+   The secondary text *"Healthcare. Enterprise. Public policy."* sits directly across the glowing horizontal light beam, while the pill button overlays the bright purple gradient inside the ring, causing visual interference and reduced contrast. Increase vertical spacing or add a subtle backdrop scrim behind the text stack.
+
+3. **Graphic occlusion (Desktop):**
+   The oversized *"ePAC."* headline dominates the central cavity of the 3D coiled ring, heavily occluding the horizontal beam and the small circular reticle located between the letters "P" and "A". Scale down the central typography slightly so the focal graphic details remain visible.
+
+4. **Background texture clash (Desktop):**
+   The supporting line *"Healthcare. Enterprise. Public policy."* and the *"Explore the perspective"* button overlap directly over the dark, ribbed ridges of the metallic coil, making the thin white lettering compete with high-frequency background texture.
+
+5. **Starfield visibility (Both views):**
+   No starfield or celestial particle elements are visible in the background gradient in either view. If a starfield is intended, increase its opacity or layer visibility above the background gradient.
+
+---
+*Note: Interactive states, audio functionality, video frame rate, and scrolling/motion playback speed cannot be evaluated from static screenshots.*

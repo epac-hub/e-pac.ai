@@ -1,47 +1,28 @@
-# ePAC landing page — implementation and design
+# ePAC — corrección integral del 10-19-2026
 
-## Scope
-Approved on 10-18-2026 with the explicit direction to replace the existing e-pac.ai site. Build and verify the landing page in the managed project, then save source and static output to epac-hub/e-pac.ai and deploy through its existing GitHub Pages configuration. Preserve CNAME, existing historical pages and Git history; do not change DNS. Use every requested effect from the supplied reference. Reuse the existing Seedance hero MP4, Higgsfield narrative MP4, ambient soundtrack, and stills from the selected repository. Provider usage is a production workflow, not a visitor-facing live generation feature. Reuse the repository's Gemini screenshot review script and execute a private screenshot review during production; no API keys enter the browser.
+## Autorización y objetivo
+El usuario rechazó la portada anterior por falta de claridad, minimalismo y presencia cinematográfica. Solicita arreglarla. Se mantiene la autorización anterior para sustituir el sitio e-pac.ai a través de epac-hub/e-pac.ai, sin cambiar DNS, CNAME ni borrar contenido histórico. No se reinicializa el proyecto.
 
-## Page and content
-A cinematic opening with the ePAC wordmark and an editorial headline introduces Elliot Pacheco Beauchamp's work at the intersection of healthcare, business, public policy, and technology. Below it: a brief profile, horizontally scrolling focus-area panels, a pinned numbered approach section, three interactive creative-process cards (Seedance, Higgsfield, Google AI Studio), a legible feature showcase containing all nine requested techniques, and a centered contact/footer. Professional biography comes only from user-provided context and is identified as such. The known email elliotpac@gmail.com can be used for a native email CTA; no invented contact details, testimonials, project results, or statistics.
+## Dirección completa
+Una portada editorial cinematográfica minimalista: película visible a pantalla completa, ePAC dominante, identificación inmediata de Elliot Pacheco Beauchamp y sus áreas profesionales, y una sola acción principal. No usar una esfera gigante como sustituto del video. El recorrido alterna cine oscuro con una superficie marfil clara, texto negro nítido, espacio intencional y menos adornos. La página presenta a ePAC; no es un catálogo de herramientas de desarrollo.
 
-## Implementation
-React + TypeScript + Vite, GSAP with @gsap/react and ScrollTrigger, Lenis smooth scrolling, lazy React Three Fiber / Three.js scene with an interactive distorted icosahedron, and a custom GLSL simplex-noise background. A single GPU points draw call renders 2000 scroll-responsive stars. Cursor dot, ring, glow trail and state-aware scaling use mix-blend-mode:difference; magnetic buttons pull toward the cursor and spring back. Portal section reveals use clip-path circles. Desktop focus panels move horizontally in a vertically pinned section. Approach content stays pinned while numbered steps change. Ambient audio is opt-in, starts only on a gesture, and fades in/out. The motion control pauses video, particles, cursor effects and animated shaders. Reduced-motion and mobile use static readable fallbacks, no scroll traps, a native cursor and naturally stacked panels.
+Eliminar de la portada las nueve tarjetas de especificaciones y las tres tarjetas promocionales de proveedores. Las nueve técnicas solicitadas permanecen como comportamiento real: cursor dot/ring/trail y diferencia; magnetismo elástico con brillo; icosaedro interactivo pequeño en la escena del enfoque; 2000 puntos GPU y shader simplex en el bloque oscuro; portales circulares solo sobre capas decorativas; audio espacial opt-in con fade; áreas que se desplazan horizontalmente al bajar; y tres pasos fijados con transición visible. El contenido nunca queda oculto por un clip-path. Seedance aporta la película de apertura; Higgsfield aporta la escena narrativa; Gemini hace revisión visual de producción. La trazabilidad de proveedores queda en un enlace discreto del pie y documentación, no ocupa el relato principal.
 
-Static rendering supplies meaningful initial HTML and metadata. A build-time React server render produces the page body, hydrated by the browser. No server, database, credentials, forms with fake submissions or unnecessary accounts. The site uses relative asset paths. Preview listens on the configured port 3000. Commit a verified version to the Manus-managed repository; this does not change the existing user repository or custom domain. Publication and domain replacement are separate actions.
+## Estructura y contenido
+1. Hero full-bleed con película Seedance, ePAC como tipografía dominante, nombre completo, línea breve de áreas y acción a la identidad.
+2. Perfil marfil, breve: entrepreneur, community-pharmacy owner, public-policy advocate en Puerto Rico, según contexto profesional proporcionado por el usuario. Sin clientes, métricas ni testimonios inventados.
+3. Cuatro áreas profesionales en un recorrido horizontal compacto: healthcare, enterprise, public policy, technology. Cada una incluye una descripción breve, sin etiquetas repetidas ni diagramas innecesarios.
+4. Enfoque de tres pasos con movimiento fijado corto, escena Higgsfield visible y pequeño objeto WebGL responsivo. Contacto y pie marfil simple.
 
-## Project structure
-- src/App.tsx: semantic landing page and content.
-- src/components/: WebGL scene, cursor, audio, magnetic links and creative-process dialog.
-- src/hooks/: motion preferences and GSAP/Lenis lifecycle.
-- src/styles.css: responsive editorial visual system and reduced-motion rules.
-- public/media/: existing video, still and soundtrack assets.
-- public/manus-routes.json: the single Home route.
-- tools/: build-time HTML render and reused private Gemini screenshot review.
-- plan.md, TODO.md, QA.md: scope, outcomes, checks and evidence.
+Conservar el contenido público en inglés de la versión anterior. El idioma de esta tarea y la documentación de corrección es español. Email conservado del contexto proporcionado: elliotpac@gmail.com.
 
-## Design
-**Design movement:** cinematic editorial futurism, guided by the reference's midnight-purple glass and starfield.
+## Medios e implementación
+React/TypeScript/Vite con render estático del HTML significativo e hidratación. Nueva película de marca abstracta cuando se genere correctamente; no simular fotografías de una persona real o lugar concreto. Mantener el clip Higgsfield existente solo si la revisión confirma utilidad. Video protagonista en escritorio y móvil con autoplay muted/playsInline, poster real y recuperación visible con acción play si el navegador impide autoplay. Preferencia reduced-motion y control manual desactivan la reproducción y efectos. Mobile conserva el cine mediante poster y/o video ligero; no cursor ni WebGL pesado.
 
-**Principles:** strong text contrast; generous intentional space; one commanding visual per section; restrained motion with clear user control.
+src/App.tsx contiene la composición, src/styles.css el sistema minimalista responsivo, src/components/CinematicVideo.tsx la reproducción con pause/visibility y estado observable, src/components/CosmicScene.tsx el WebGL ya existente, src/components/InteractionControls.tsx cursor/magnetismo/audio, src/hooks/usePageMotion.ts los efectos sin ocultar texto, public/media los medios reales, tools/visual-qa-gemini.py la revisión privada. Ninguna credencial pasa al cliente.
 
-**Color philosophy:** near-black aubergine provides a serious institutional base, warm ivory keeps text readable, and electric lavender signals technical precision without overwhelming the content.
+## Sistema visual
+Editorial de lujo técnico, no dashboard ni catálogo. Marfil #f4f3ef y casi negro #0b0b10 como superficies principales; lavanda #b79aff en acentos de luz, no en cada texto. Space Grotesk para ePAC/títulos y Manrope para texto. Texto principal mínimo de 15px, metadatos de 11–12px, longitud contenida. Una jerarquía fuerte por pantalla. Header transparente sobre cine, claro sobre marfil, enlaces mínimos. Pie alineado y centrado. Interacciones deliberadas y reversibles, contenido semántico siempre visible. Sin prometer rendimiento o cumplimiento no medido.
 
-**Layout:** asymmetric opening with large left-aligned type and a right-side orbital object. Broad editorial sections alternate with an edge-to-edge horizontal narrative and a pinned approach. Avoid a generic card grid as the entire page.
-
-**Signature elements:** thin orbital rings, tiny coordinate-style section labels, and hairline lavender boundaries. Glass cards remain substantially opaque enough for readable text.
-
-**Interaction:** calm physical magnetism, a light cursor halo, and depth responding to intent. Navigation is keyboard-operable and anchors remain functional without motion.
-
-**Animation:** introductory opacity/transform reveals; GSAP horizontal travel and pinned steps; clip-path portal reveals; slow WebGL distortion; scroll-driven stars; native motion opt-out. All GSAP effects clean up with useGSAP contexts. Heavy 3D is disabled under 768px; page visibility pauses rendering and media.
-
-**Typography:** Space Grotesk display and wordmark, Manrope body, and a system monospace for compact labels. Large tightly tracked typography and moderate paragraph widths.
-
-**Brand essence:** ePAC introduces Elliot Pacheco Beauchamp's healthcare, enterprise and policy work through an intelligently directed digital experience. Precise, purposeful, forward-looking.
-
-**Voice:** serious, concise, institutional. Examples: “Intelligence. With purpose.” and “Healthcare. Enterprise. Public policy.” These are positioning lines, not claims of measured outcomes.
-
-**Wordmark:** custom tracked ePAC lettering with an orbital four-point symbol and a small lavender terminal dot; no fabricated corporate certification mark.
-
-**Signature color:** electric lavender #b79aff.
+## Guardado y publicación
+Ejecutar typecheck/build, una revisión solo lectura de la integración, y capturas dirigidas del hero escritorio y móvil para comprobar que el cine realmente se ve y el texto se entiende. Guardar versión en repositorio gestionado y copia editable en epac-hub/e-pac.ai/epac-landing. Copiar dist a la raíz sin operaciones destructivas; conservar CNAME, 404 y rutas históricas. Verificar build Pages del commit exacto y HTML público del dominio, no solo push exitoso.

@@ -1,0 +1,15 @@
+{
+  "focus": {
+    "transform": "matrix(1, 0, 0, 1, -605, 0)",
+    "count": "02 / 04",
+    "clipContent": "none",
+    "clipLayer": "circle(150% at 50% 50%)"
+  },
+  "approach": {
+    "active": "Build.",
+    "number": "03 / 03",
+    "clipContent": "none",
+    "narrative": "playing",
+    "scroll": 4127
+  }
+}

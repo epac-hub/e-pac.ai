@@ -1,0 +1,41 @@
+{
+  "url": "https://8328-iw7hwo01yps9dfkm7ax42-a7633fbe.us1.manus.computer/",
+  "manual_play_fallback_used": false,
+  "initial": {
+    "visibility": "visible",
+    "playback": "playing",
+    "time": 2.935937,
+    "paused": false,
+    "ready": 4,
+    "overflow": false,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "stageHeights": [
+      {
+        "id": "focus",
+        "height": 1016
+      },
+      {
+        "id": "approach",
+        "height": 1016
+      }
+    ]
+  },
+  "after_two_seconds": {
+    "time": 5.0026,
+    "paused": false,
+    "playback": "playing"
+  },
+  "motion_off": {
+    "paused": true,
+    "state": "poster",
+    "canvases": 0,
+    "focusLayout": "grid"
+  },
+  "audio_after_user_gesture": {
+    "pressed": "true",
+    "status": ""
+  }
+}
