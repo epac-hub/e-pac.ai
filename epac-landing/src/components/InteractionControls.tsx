@@ -373,7 +373,7 @@ export function MagneticButton({
  * Ambient playback has no automatic start path: it can only be enabled by a
  * click, and a visibility restore is permitted only after that explicit intent.
  */
-export function AudioControl() {
+export function AudioControl({ src = 'media/ambient.mp3' }: { src?: string } = {}) {
   const controlRef = useRef<HTMLButtonElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const explicitIntentRef = useRef(false);
@@ -392,7 +392,7 @@ export function AudioControl() {
       const safe = contextSafe!;
       const getAudio = () => {
         if (!audioRef.current) {
-          const audio = new Audio(getPublicAssetUrl("media/ambient.mp3"));
+          const audio = new Audio(getPublicAssetUrl(src));
           audio.loop = true;
           audio.preload = "auto";
           audio.volume = 0;
@@ -532,7 +532,7 @@ export function AudioControl() {
         }
       };
     },
-    { scope: controlRef },
+    { scope: controlRef, dependencies: [src], revertOnUpdate: true },
   );
 
   return (

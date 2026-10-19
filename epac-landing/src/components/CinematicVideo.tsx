@@ -4,6 +4,8 @@ import { Play } from 'lucide-react';
 export interface CinematicVideoProps {
   src: string;
   webm?: string;
+  uhdSrc?: string;
+  uhdWebm?: string;
   poster: string;
   enabled: boolean;
   className?: string;
@@ -19,6 +21,8 @@ type PlaybackState = 'poster' | 'loading' | 'playing' | 'paused' | 'blocked';
 export default function CinematicVideo({
   src,
   webm,
+  uhdSrc,
+  uhdWebm,
   poster,
   enabled,
   className,
@@ -35,6 +39,20 @@ export default function CinematicVideo({
   const playPendingRef = useRef(false);
   const [playback, setPlayback] = useState<PlaybackState>('poster');
   const [isVisible, setIsVisible] = useState(false);
+  const [useHighResolution, setUseHighResolution] = useState(false);
+  const usingUhd = useHighResolution && Boolean(uhdSrc);
+  const selectedSrc = usingUhd ? uhdSrc! : src;
+  const selectedWebm = usingUhd ? uhdWebm : webm;
+
+  useEffect(() => {
+    if (!uhdSrc) return;
+    const query = window.matchMedia('(min-width: 1024px)');
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const update = () => setUseHighResolution(query.matches && !connection?.saveData);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, [uhdSrc]);
 
   const requestPlayback = useCallback((fromUserGesture = false) => {
     const video = videoRef.current;
@@ -170,7 +188,7 @@ export default function CinematicVideo({
       playRequestRef.current += 1;
       video.pause();
     };
-  }, [enabled, poster, requestPlayback, src, webm]);
+  }, [enabled, poster, requestPlayback, selectedSrc, selectedWebm]);
 
   const handlePlaying = useCallback(() => {
     playPendingRef.current = false;
@@ -196,6 +214,10 @@ export default function CinematicVideo({
 
   const handleError = useCallback(() => {
     playPendingRef.current = false;
+    if (usingUhd) {
+      setUseHighResolution(false);
+      return;
+    }
 
     if (!enabledRef.current) {
       setPlayback('poster');
@@ -204,7 +226,7 @@ export default function CinematicVideo({
 
     blockedRef.current = true;
     setPlayback('blocked');
-  }, []);
+  }, [usingUhd]);
 
   const replay = useCallback(() => {
     if (!isVisible || !enabledRef.current || !shouldPlayRef.current) {
@@ -219,6 +241,7 @@ export default function CinematicVideo({
       ref={mediaRef}
       className={`cinematic-media ${className || ''}`.trim()}
       data-playback={playback}
+      data-resolution={usingUhd ? '4k' : 'standard'}
       style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
     >
       <img
@@ -230,7 +253,7 @@ export default function CinematicVideo({
         fetchPriority={priority ? 'high' : 'auto'}
       />
       <video
-        key={`${src}-${webm || ''}`}
+        key={`${selectedSrc}-${selectedWebm || ''}`}
         ref={videoRef}
         className="cinematic-film"
         poster={poster}
@@ -243,8 +266,8 @@ export default function CinematicVideo({
         onPause={handlePause}
         onError={handleError}
       >
-        {webm && <source src={webm} type="video/webm" />}
-        <source src={src} type="video/mp4" />
+        {selectedWebm && <source src={selectedWebm} type="video/webm" />}
+        <source src={selectedSrc} type="video/mp4" />
       </video>
       {isVisible && playback === 'blocked' && (
         <button className="film-replay" type="button" onClick={replay}>

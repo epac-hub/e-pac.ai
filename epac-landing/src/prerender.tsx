@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, readdir, rm } from 'node:fs/promises';
 import { renderToString } from 'react-dom/server';
 import App from './App';
 
@@ -7,4 +7,8 @@ const html = await readFile(file, 'utf8');
 const content = renderToString(<App />);
 if (!html.includes('<!--app-html-->')) throw new Error('Static page marker is missing.');
 await writeFile(file, html.replace('<!--app-html-->', content));
-console.log('Static HTML rendered: ePAC landing page.');
+const media = new URL('../dist/media/', import.meta.url);
+for (const name of await readdir(media)) {
+  if (name !== 'space-ambient.mp3') await rm(new URL(name, media), { recursive: true, force: true });
+}
+console.log('Static HTML rendered: ePAC space flight; discarded coastal media excluded from output.');

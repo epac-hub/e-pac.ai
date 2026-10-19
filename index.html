@@ -1,156 +1,32 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ePAC, LLC</title>
-<meta name="description" content="ePAC, LLC: healthcare, policy and government affairs in Puerto Rico.">
-<meta property="og:title" content="ePAC, LLC">
-<meta property="og:description" content="Healthcare, policy and government affairs in Puerto Rico.">
-<meta property="og:image" content="https://e-pac.ai/og-image.png">
-<meta property="og:url" content="https://e-pac.ai/">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap">
-<style>
-/* One screen. Stars drift toward the camera at one slow, steady speed; the ePAC mark arrives from deep space
-   and then tilts toward the pointer. Ambient music starts with the page, or on the first touch where the browser blocks it. */
-:root {
-  --ink: #000;
-  --paper: #fff;
-  --mist: #9a9a9a;
-  color-scheme: dark;
-}
-html, body { height: 100%; }
-body {
-  margin: 0; overflow: hidden; background: var(--ink); color: var(--paper);
-  font-family: "Geist", "Helvetica Neue", Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-.stars, .shade { position: fixed; inset: 0; width: 100%; height: 100%; }
-.stars { display: block; }
-.shade {
-  background:
-    radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.92) 100%),
-    linear-gradient(to top, rgba(0,0,0,.9), transparent 40%);
-  pointer-events: none;
-}
-
-/* letterbox bars that open like a film gate */
-.bar { position: fixed; left: 0; right: 0; height: 50vh; background: #000; z-index: 5; pointer-events: none;
-  animation: gate 1.6s cubic-bezier(.77,0,.18,1) .2s forwards; }
-.bar.top { top: 0; transform-origin: top; }
-.bar.bottom { bottom: 0; transform-origin: bottom; }
-
-main {
-  position: relative; z-index: 2; height: 100%; display: grid; place-items: center;
-  text-align: center; padding: 0 16px; perspective: 900px;
-}
-.mark { transform-style: preserve-3d; will-change: transform; }
-h1 { margin: 0; }
-.logo-wrap { position: relative; display: inline-block; }
-.logo {
-  display: block; width: clamp(240px, 58vw, 400px); height: auto; margin: 0 auto;
-  opacity: 0; transform: translateZ(-2600px) scale(.2); filter: blur(18px);
-  animation: arrive 2.6s cubic-bezier(.12,.82,.18,1) .9s forwards;
-}
-/* a thin light sweep across the ring after landing */
-.sheen {
-  position: absolute; inset: 0; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
-  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.35) 50%, transparent 60%);
-  background-size: 250% 100%; background-position: 150% 0; opacity: 0;
-  animation: sweep 1.8s ease-in-out 3.6s forwards;
-}
-footer {
-  position: fixed; z-index: 2; left: 0; right: 0; bottom: max(20px, env(safe-area-inset-bottom));
-  text-align: center; color: var(--mist); font-size: .75rem; letter-spacing: .12em;
-  opacity: 0; animation: fade 1.2s ease 4.4s forwards;
-}
-@keyframes gate { to { transform: scaleY(0); } }
-@keyframes arrive {
-  0%   { opacity: 0; transform: translateZ(-2600px) scale(.2); filter: blur(18px); }
-  55%  { opacity: 1; filter: blur(2px); }
-  80%  { transform: translateZ(60px) scale(1.04); filter: blur(0); }
-  100% { opacity: 1; transform: none; filter: none; }
-}
-@keyframes sweep { 0% { opacity: 1; background-position: 150% 0; } 100% { opacity: 1; background-position: -50% 0; } }
-@keyframes fade { to { opacity: .75; } }
-@media (prefers-reduced-motion: reduce) {
-  .logo, footer { animation: none; opacity: 1; transform: none; filter: none; }
-  .bar, .sheen { display: none; }
-}
-</style>
-</head>
-<body>
-<audio class="music" src="/manus-storage/ambient-space_659e307d.mp3" autoplay loop preload="auto"></audio>
-<canvas class="stars" aria-hidden="true"></canvas>
-<div class="shade"></div>
-<div class="bar top"></div>
-<div class="bar bottom"></div>
-<main>
-  <div>
-    <div class="mark">
-      <h1 class="logo-wrap"><img class="logo" src="/brand/epac-logo.png" alt="ePAC" width="1200" height="1200"><span class="sheen"></span></h1>
-    </div>
-  </div>
-</main>
-<footer>© ePAC, LLC</footer>
-<script>
-(() => {
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // Music: browsers may refuse sound before the visitor interacts, so retry on the first touch, click, key or scroll.
-  const music = document.querySelector('.music');
-  music.volume = .6;
-  const play = () => music.play().then(() => gone.forEach(e => removeEventListener(e, play))).catch(() => {});
-  const gone = ['pointerdown', 'keydown', 'touchstart', 'wheel'];
-  gone.forEach(e => addEventListener(e, play));
-  play();
-  if (still) return;
-
-  // Starfield: points in 3D drifting toward the camera at one constant, slow speed.
-  const c = document.querySelector('.stars'), x = c.getContext('2d');
-  const D = devicePixelRatio > 1 ? 2 : 1;
-  let W, H;
-  const resize = () => { W = c.width = innerWidth * D; H = c.height = innerHeight * D; };
-  resize(); addEventListener('resize', resize);
-  const spawn = (s, far) => {
-    s.x = (Math.random() - .5) * 2; s.y = (Math.random() - .5) * 2;
-    s.z = s.pz = far ? 1 : Math.random() * .9 + .1;
-    return s;
-  };
-  const stars = Array.from({ length: 1600 }, () => spawn({}));
-
-  const t0 = performance.now();
-  let px = 0, py = 0, tx = 0, ty = 0;
-  addEventListener('pointermove', e => { tx = e.clientX / innerWidth - .5; ty = e.clientY / innerHeight - .5; });
-
-  const mark = document.querySelector('.mark');
-  const frame = now => {
-    const t = (now - t0) / 1000;
-    const speed = .0035;
-    px += (tx - px) * .05; py += (ty - py) * .05;
-
-    x.globalCompositeOperation = 'destination-out';
-    x.fillStyle = 'rgba(0,0,0,.9)';
-    x.fillRect(0, 0, W, H);
-    x.globalCompositeOperation = 'source-over';
-    const cx = W / 2 - px * 60 * D, cy = H / 2 - py * 60 * D, f = Math.min(W, H) * .5;
-    for (const s of stars) {
-      s.pz = s.z; s.z -= speed;
-      if (s.z <= .02) { spawn(s, true); continue; }
-      const sx = cx + s.x / s.z * f, sy = cy + s.y / s.z * f;
-      if (sx < 0 || sx > W || sy < 0 || sy > H) { spawn(s, true); continue; }
-      const ox = cx + s.x / s.pz * f, oy = cy + s.y / s.pz * f;
-      x.strokeStyle = `rgba(255,255,255,${Math.min(1, (1 - s.z) * 1.4)})`;
-      x.lineWidth = (1 - s.z) * 2.2 * D + .3;
-      x.beginPath(); x.moveTo(ox, oy); x.lineTo(sx, sy); x.stroke();
-    }
-    if (t > 3.5) mark.style.transform = `rotateY(${px * 14}deg) rotateX(${-py * 14}deg)`;
-    requestAnimationFrame(frame);
-  };
-  requestAnimationFrame(frame);
-})();
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <title>ePAC, LLC</title>
+    <meta name="description" content="ePAC, LLC: healthcare, policy and government affairs in Puerto Rico." />
+    <link rel="canonical" href="https://e-pac.ai/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ePAC" />
+    <meta property="og:title" content="ePAC, LLC" />
+    <meta property="og:description" content="Healthcare, policy and government affairs in Puerto Rico." />
+    <meta property="og:url" content="https://e-pac.ai/" />
+    <meta property="og:image" content="https://e-pac.ai/brand/epac-logo-restored.webp" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="ePAC, LLC" />
+    <meta name="twitter:description" content="Healthcare, policy and government affairs in Puerto Rico." />
+    <meta name="twitter:image" content="https://e-pac.ai/brand/epac-logo-restored.webp" />
+    <link rel="icon" type="image/png" href="/brand/epac-logo-restored.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="/assets/index-Dr1M-UOW.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/motion-O4yqwNt3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-wBRNdMtK.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-11xJsM86.css">
+  </head>
+  <body>
+    <div id="root"><link rel="preload" as="image" href="/brand/epac-logo-restored.webp" fetchPriority="high"/><div class="space-home motion-disabled "><a class="skip-link" href="#main">Skip to content</a><canvas aria-hidden="true" data-renderer="webgl" data-frame="0" data-motion="paused" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;background:#000"></canvas><div class="space-shade" aria-hidden="true"></div><div class="film-gate gate-top" aria-hidden="true"></div><div class="film-gate gate-bottom" aria-hidden="true"></div><main id="main" class="center-mark" aria-label="ePAC"><div class="mark-perspective"><div class="mark-tilt"><h1 class="mark-arrival"><img class="logo" src="/brand/epac-logo-restored.webp" width="1200" height="1200" alt="ePAC" fetchPriority="high"/></h1></div></div></main><footer class="space-footer"><span>© ePAC, LLC</span></footer><div class="space-controls" aria-label="Experience controls"><button type="button" class="audio-control" aria-label="Turn sound on" aria-pressed="false"><span class="audio-bars" aria-hidden="true"><span class="audio-bar"></span><span class="audio-bar"></span><span class="audio-bar"></span></span><span class="audio-label">Sound <!-- -->off</span><span class="audio-status" role="status" aria-live="polite"></span></button><button class="motion-toggle" type="button" title="Resume motion" aria-label="Resume space flight" aria-pressed="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></button></div></div></div>
+  </body>
 </html>
