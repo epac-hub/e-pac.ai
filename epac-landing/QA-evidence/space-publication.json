@@ -1,0 +1,39 @@
+{
+  "commit": "69ba47bf9c6e9539986130b2bb2126cf6141638a",
+  "pages_status": "built",
+  "url": "https://e-pac.ai/",
+  "html_sha256": "77c7d16705edf1a11129180981bada90dfff19dc34259942add60ab1a9501e6c",
+  "html_matches_local": true,
+  "assets": [
+    {
+      "path": "/brand/epac-logo-restored.webp",
+      "status": 200,
+      "type": "image/webp"
+    },
+    {
+      "path": "/brand/epac-logo-original.png",
+      "status": 200,
+      "type": "image/png"
+    },
+    {
+      "path": "/media/space-ambient.mp3",
+      "status": 200,
+      "type": "audio/mp3"
+    },
+    {
+      "path": "/manus-routes.json",
+      "status": 200,
+      "type": "application/json; charset=utf-8"
+    },
+    {
+      "path": "/landing/",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/experience/",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    }
+  ]
+}

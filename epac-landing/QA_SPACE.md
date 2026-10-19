@@ -1,6 +1,6 @@
 # QA — portada espacial conservada de e-pac.ai
 
-Fecha: 10-19-2026. Esta versión conserva la portada negra espacial del commit fcfc9503d9b79f69fac82ac528121374eff56c11, no las composiciones costeras descartadas. Publicación pendiente de confirmar en este registro.
+Fecha: 10-19-2026. Esta versión conserva la portada negra espacial del commit fcfc9503d9b79f69fac82ac528121374eff56c11, no las composiciones costeras descartadas. Publicación confirmada: https://e-pac.ai; commit 69ba47bf9c6e9539986130b2bb2126cf6141638a, GitHub Pages built; HTML idéntico al build local.
 
 ## Checklist ejecutado
 
@@ -13,7 +13,7 @@ Fecha: 10-19-2026. Esta versión conserva la portada negra espacial del commit f
 - [x] Centro, logo cargado y ausencia de overflow verificados en 1440×900, 390×844, 844×390, 320×568 y 3840×2160. En la última prueba el canvas dibujó 3840×2160; no equivale a garantía de fps o 4K fijo en cualquier dispositivo.
 - [x] pnpm check, pnpm build y git diff --check completos. Build estático contiene la composición espacial y sólo space-ambient.mp3 en dist/media. No se eliminaron los archivos fuente costeros del usuario.
 - [x] Una revisión de integración read-only concluyó sin bloqueantes.
-- [ ] Confirmar el commit construido por GitHub Pages, el HTML público y los assets HTTPS en https://e-pac.ai.
+- [x] Confirmar el commit construido por GitHub Pages, el HTML público y los assets HTTPS en https://e-pac.ai.
 
 ## Visualización
 
@@ -23,4 +23,4 @@ El campo de estrellas es una visualización artística procedural, no un mapa as
 
 QA-evidence/space-runtime.json y tools/verify-space-runtime.py contienen las mediciones y el procedimiento de centro, raster, pausa, audio, reduced motion y fallback usando el navegador existente. Las capturas oficiales de escritorio/móvil verifican composición, no miden rendimiento ni prueban movimiento por sí solas. La verificación no garantiza rendimiento para todos los dispositivos. Vite emitió una advertencia no bloqueante de chunk mayor a 500 kB; no un error de compilación.
 
-Se preservan CNAME, 404, PNG originales y directorios históricos del repositorio público. La publicación sólo se marcará completa cuando el commit exacto y el HTML del dominio sean confirmados.
+Se preservan CNAME, 404, PNG originales y directorios históricos del repositorio público. La publicación quedó confirmada. SHA-256 HTML público: 77c7d16705edf1a11129180981bada90dfff19dc34259942add60ab1a9501e6c. Logo, audio, manifest y páginas históricas verificadas por HTTPS 200.
