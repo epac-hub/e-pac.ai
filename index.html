@@ -3,440 +3,76 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ePAC, LLC</title>
+<meta name="description" content="ePAC, LLC: health, pharmacy and health policy in Puerto Rico.">
 <meta property="og:title" content="ePAC, LLC">
-<meta property="og:description" content="Health, pharmacy and health policy in Puerto Rico, done with rigor.">
+<meta property="og:description" content="Health, pharmacy and health policy in Puerto Rico.">
 <meta property="og:image" content="https://e-pac.ai/og-image.png">
 <meta property="og:url" content="https://e-pac.ai/">
-<title>ePAC Cinema</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="ePAC, LLC: health, pharmacy and health policy in Puerto Rico, done with rigor.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Geist:wght@400;500&display=swap">
 <style>
-/* Layout: one fixed cinema stage. Five chapters stack in place and cut between each other; nothing scrolls. */
+/* One screen, nothing scrolls: film behind, the name in front, one line under it. */
 :root {
-  --ink: #07060d;          /* deep space, from the footage */
-  --ink-2: #110e1f;
-  --paper: #f2eefc;        /* titles */
-  --mist: #a69fc0;         /* secondary text, violet-biased grey */
-  --lilac: #b8a6ff;        /* nebula glow */
-  --amber: #f2a65e;        /* astronaut visor light, the one warm accent */
-  --line: rgba(242, 238, 252, 0.14);
-  --display: "Instrument Serif", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  --body: "Geist", "Helvetica Neue", Arial, sans-serif;
-  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --ease: cubic-bezier(.77, 0, .18, 1);
-  --cut: 1.15s;
+  --ink: #07060d;
+  --paper: #f2eefc;
+  --mist: #a69fc0;
+  --amber: #f2a65e;
   color-scheme: dark;
 }
 html, body { height: 100%; }
 body {
-  margin: 0; background: var(--ink); color: var(--paper);
-  font-family: var(--body); font-weight: 400; font-size: 16px; line-height: 1.55;
-  overflow: hidden; -webkit-font-smoothing: antialiased;
-  overscroll-behavior: none; touch-action: pan-x;
+  margin: 0; overflow: hidden; background: var(--ink); color: var(--paper);
+  font-family: "Geist", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
-button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
-:focus-visible { outline: 1px solid var(--amber); outline-offset: 4px; border-radius: 2px; }
-
-/* ---------- stage ---------- */
-.stage { position: fixed; inset: 0; overflow: hidden; background: var(--ink); }
-.scene {
-  position: absolute; inset: 0; display: grid; overflow: hidden;
-  visibility: hidden; clip-path: inset(50% 0 50% 0);
-  transition: clip-path var(--cut) var(--ease), visibility 0s linear var(--cut);
-}
-.scene.is-active { visibility: visible; clip-path: inset(0 0 0 0); transition: clip-path var(--cut) var(--ease), visibility 0s; z-index: 2; }
-.scene.is-leaving { visibility: visible; clip-path: inset(0 0 0 0); z-index: 1; transition: none; }
-
-.bg { position: absolute; inset: 0; z-index: 0; }
-.bg video, .bg img { width: 100%; height: 100%; object-fit: cover; display: block; max-width: none; }
-.bg::after { /* vignette */
-  content: ""; position: absolute; inset: 0;
+.film, .shade { position: fixed; inset: 0; width: 100%; height: 100%; }
+.film { object-fit: cover; transform: scale(1.06); animation: drift 24s ease-out forwards; }
+.shade {
   background:
-    radial-gradient(120% 90% at 50% 45%, transparent 35%, rgba(7, 6, 13, .78) 100%),
-    linear-gradient(180deg, rgba(7, 6, 13, .55) 0%, transparent 22%, transparent 70%, rgba(7, 6, 13, .9) 100%);
+    radial-gradient(ellipse at center, rgba(7,6,13,.15) 0%, rgba(7,6,13,.75) 75%),
+    linear-gradient(to top, rgba(7,6,13,.85), transparent 45%);
 }
-.scene.is-active .bg > * { animation: drift 16s ease-out both; }
-@keyframes drift { from { transform: scale(1.14) translate3d(1.5%, 1%, 0); } to { transform: scale(1.02) translate3d(0, 0, 0); } }
-
-.frame {
-  position: relative; z-index: 3; align-self: center;
-  width: 100%; max-width: 1240px; margin: 0 auto; box-sizing: border-box;
-  padding-left: max(24px, env(safe-area-inset-left, 0px));
-  padding-right: max(24px, env(safe-area-inset-right, 0px));
-  padding-block: 96px;
+main {
+  position: relative; height: 100%; display: grid; place-items: center;
+  text-align: center; padding: 0 16px;
 }
-
-/* letterbox, grain, glow */
-.bars::before, .bars::after {
-  content: ""; position: fixed; left: 0; right: 0; height: 7vh; background: #000; z-index: 20; pointer-events: none;
-  transition: transform 1.6s var(--ease) .2s;
+h1 {
+  margin: 0; font-family: "Instrument Serif", Georgia, serif; font-weight: 400;
+  font-size: clamp(5.5rem, 26vw, 17rem); line-height: .9; letter-spacing: -.02em;
+  opacity: 0; animation: rise 1.8s cubic-bezier(.2,.7,.2,1) .3s forwards;
 }
-.bars::before { top: 0; transform: translateY(0); }
-.bars::after { bottom: 0; transform: translateY(0); }
-.is-open .bars::before { transform: translateY(-100%); }
-.is-open .bars::after { transform: translateY(100%); }
-.grain {
-  position: fixed; inset: -50%; z-index: 15; pointer-events: none; opacity: .07; mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  animation: grain 0.9s steps(6) infinite;
+h1 span { color: var(--amber); }
+p {
+  margin: 1.4rem 0 0; color: var(--mist); font-size: clamp(.8rem, 2.6vw, 1rem);
+  letter-spacing: .32em; text-transform: uppercase;
+  opacity: 0; animation: rise 1.6s cubic-bezier(.2,.7,.2,1) 1.1s forwards;
 }
-@keyframes grain { 0%{transform:translate(0,0)} 20%{transform:translate(-3%,2%)} 40%{transform:translate(2%,-3%)} 60%{transform:translate(-2%,-1%)} 80%{transform:translate(3%,3%)} 100%{transform:translate(0,0)} }
-.glow {
-  position: fixed; z-index: 14; width: 46vmax; height: 46vmax; left: 0; top: 0; pointer-events: none;
-  border-radius: 50%; background: radial-gradient(circle, rgba(184, 166, 255, .13), transparent 60%);
-  transform: translate(-50%, -50%); transition: opacity .6s;
+footer {
+  position: fixed; left: 0; right: 0; bottom: max(20px, env(safe-area-inset-bottom));
+  text-align: center; color: var(--mist); font-size: .75rem; letter-spacing: .12em; opacity: .7;
 }
-
-/* ---------- HUD ---------- */
-.hud { position: fixed; left: 0; right: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
-.hud-top { top: 0; padding-top: calc(env(safe-area-inset-top, 0px) + 22px); }
-.hud-bottom { bottom: 0; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); align-items: flex-end; }
-.mark { font-family: var(--display); font-size: 26px; letter-spacing: .01em; line-height: 1; }
-.mark i { color: var(--amber); font-style: normal; }
-.hud-right { display: flex; align-items: center; gap: 22px; }
-.label { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--mist); }
-.counter { font-variant-numeric: tabular-nums; }
-.counter b { color: var(--paper); font-weight: 500; }
-.sound { display: inline-flex; align-items: center; gap: 10px; }
-.eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; }
-.eq span { width: 2px; height: 3px; background: var(--mist); transition: height .3s; }
-.sound[aria-pressed="true"] .eq span { background: var(--amber); animation: eq 1s ease-in-out infinite; }
-.sound[aria-pressed="true"] .eq span:nth-child(2) { animation-delay: .2s; }
-.sound[aria-pressed="true"] .eq span:nth-child(3) { animation-delay: .45s; }
-.sound[aria-pressed="true"] .eq span:nth-child(4) { animation-delay: .1s; }
-@keyframes eq { 0%,100% { height: 3px } 50% { height: 12px } }
-
-.chapters { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; flex: 1; min-width: 0; }
-.chapters button { display: grid; gap: 10px; text-align: left; min-width: 0; opacity: .55; transition: opacity .4s; }
-.chapters button:hover, .chapters button[aria-current="step"] { opacity: 1; }
-.chapters .track { display: block; width: 100%; height: 1px; background: var(--line); position: relative; overflow: hidden; }
-.chapters .fill { position: absolute; inset: 0; background: var(--amber); transform: scaleX(0); transform-origin: left; }
-.chapters button[aria-current="step"] .fill { transform: scaleX(var(--p, 0)); }
-.chapters button.done .fill { transform: scaleX(1); background: var(--mist); }
-.chapters li { flex: 1; min-width: 0; }
-.hint { white-space: nowrap; }
-
-/* ---------- type ---------- */
-.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--amber); margin: 0 0 28px; }
-h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
-.giant { font-size: clamp(96px, 21vw, 340px); line-height: .82; letter-spacing: -0.035em; }
-.giant em { color: var(--lilac); }
-.h2 { font-size: clamp(40px, 6.2vw, 92px); line-height: 1.0; max-width: 16ch; }
-.h2 em { color: var(--lilac); }
-.lede { font-size: clamp(17px, 1.6vw, 21px); color: var(--mist); max-width: 46ch; margin: 30px 0 0; font-weight: 300; }
-.lede strong { color: var(--paper); font-weight: 400; }
-
-/* staggered reveal: words rise out of a mask when a chapter becomes active */
-.w { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .06em; margin-bottom: -.06em; }
-.w > span { display: inline-block; transform: translateY(105%); transition: transform 1.1s var(--ease); transition-delay: calc(var(--i, 0) * 60ms + .35s); }
-.scene.is-active .w > span { transform: none; }
-.fade { opacity: 0; transform: translateY(14px); transition: opacity 1s ease, transform 1s var(--ease); transition-delay: calc(var(--d, 0) * 1ms + .6s); }
-.scene.is-active .fade { opacity: 1; transform: none; }
-
-.cta { margin-top: 44px; display: inline-flex; align-items: center; gap: 14px; font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
-  padding: 16px 22px; border: 1px solid var(--line); border-radius: 999px; transition: border-color .3s, background .3s; }
-.cta:hover { border-color: var(--amber); background: rgba(242, 166, 94, .08); }
-.cta .arr { transition: transform .3s; }
-.cta:hover .arr { transform: translateX(4px); }
-
-/* ---------- scene specifics ---------- */
-.s1 .frame { align-self: end; padding-bottom: 18vh; }
-.s1 .meta { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 34px; }
-
-.s3 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); margin-top: 48px; border: 1px solid var(--line); }
-.card { background: rgba(7, 6, 13, .72); backdrop-filter: blur(6px); padding: 30px 28px 34px; display: grid; gap: 14px; align-content: start; min-width: 0;
-  transition: background .5s; position: relative; }
-.card:hover { background: rgba(17, 14, 31, .9); }
-.card .kind { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--mist); }
-.card h3 { font-size: clamp(28px, 2.6vw, 40px); line-height: 1.05; }
-.card p { margin: 0; color: var(--mist); font-size: 15px; max-width: 34ch; }
-.card .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 18px var(--amber); }
-
-.s4 .frame { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
-.values { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.values button { font-family: var(--display); font-size: clamp(40px, 6vw, 88px); line-height: 1.02; color: rgba(242, 238, 252, .22); transition: color .6s, transform .6s var(--ease); text-align: left; }
-.values button[aria-selected="true"] { color: var(--paper); transform: translateX(14px); }
-.values button[aria-selected="true"]::before { content: ""; display: inline-block; width: .32em; height: 1px; background: var(--amber); vertical-align: middle; margin-right: .3em; }
-.value-copy { min-height: 7.5em; }
-.value-copy p { margin: 0; font-size: clamp(18px, 1.8vw, 24px); font-weight: 300; color: var(--paper); max-width: 30ch; }
-.value-copy .label { display: block; margin-bottom: 16px; }
-
-.s5 .frame { text-align: left; }
-.s5 .giant { font-size: clamp(84px, 16vw, 260px); }
-.s5 .row { display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: center; margin-top: 40px; }
-.s5 .row .cta { margin-top: 0; }
-
-/* intro title card */
-.intro { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: var(--ink); transition: opacity 1.2s ease .3s, visibility 0s linear 1.6s; }
-.is-open .intro { opacity: 0; visibility: hidden; }
-.intro .label { opacity: 0; animation: introIn 1.4s ease .2s forwards; }
-@keyframes introIn { to { opacity: 1; } }
-
-/* ---------- narrow screens ---------- */
-@media (max-width: 860px) {
-  .s3 .grid { grid-template-columns: minmax(0, 1fr); margin-top: 28px; }
-  .card { padding: 18px 20px 20px; gap: 8px; }
-  .card p { font-size: 14px; }
-  .card h3 { font-size: 26px; }
-  .s3 .lede { display: none; }
-  .s4 .frame { grid-template-columns: minmax(0, 1fr); gap: 20px; }
-  .values button { font-size: clamp(34px, 10vw, 56px); }
-  .value-copy { min-height: 6em; }
-  .chapters .name { display: none; }
-  .chapters { gap: 10px; }
-  .hint { display: none; }
-  .frame { padding-block: 84px; }
-  .s1 .frame { padding-bottom: 16vh; }
-}
-@media (max-height: 640px) and (min-width: 861px) {
-  .s3 .grid { margin-top: 24px; } .card { padding: 20px; } .lede { margin-top: 18px; }
-}
-
+@keyframes rise { from { opacity: 0; transform: translateY(24px); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes drift { to { transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) {
-  :root { --cut: .01s; }
-  .scene.is-active .bg > *, .grain { animation: none; }
-  .w > span, .fade { transition: none; transform: none; opacity: 1; }
-  .bars::before, .bars::after { display: none; }
+  .film, h1, p { animation: none; opacity: 1; transform: none; }
 }
 </style>
 </head>
 <body>
-
-
-<div class="intro" aria-hidden="true"><span class="label">ePAC, LLC &nbsp;·&nbsp; Puerto Rico</span></div>
-<div class="bars" aria-hidden="true"></div>
-<div class="grain" aria-hidden="true"></div>
-<div class="glow" aria-hidden="true"></div>
-
-<header class="hud hud-top">
-  <button class="mark" data-go="0" aria-label="ePAC, back to start">ePAC<i>.</i></button>
-  <div class="hud-right">
-    <span class="label counter" aria-live="polite"><b id="ch-now">01</b> / 05</span>
-    <button class="label sound" id="sound" aria-pressed="false"><span class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span id="sound-label">Sound</span></button>
+<video class="film" src="/manus-storage/seedance-web_15a96ec9.mp4" poster="/manus-storage/hero-poster_c4087cb3.jpg" autoplay muted loop playsinline aria-hidden="true"></video>
+<div class="shade"></div>
+<main>
+  <div>
+    <h1>ePAC<span>.</span></h1>
+    <p>Health · Pharmacy · Policy</p>
   </div>
-</header>
-
-<main class="stage" id="stage">
-
-  <section class="scene s1 is-active" data-name="Opening" aria-label="Opening">
-    <div class="bg"><video autoplay muted loop playsinline preload="auto" poster="manus-storage/hero-poster_c4087cb3.jpg"><source src="manus-storage/seedance-web_15a96ec9.mp4" type="video/mp4"></video></div>
-    <div class="frame">
-      <p class="eyebrow fade">Health · Pharmacy · Health policy</p>
-      <h1 class="giant split">ePAC<em>.</em></h1>
-      <p class="lede fade" style="--d:300">Health, pharmacy and health policy in Puerto Rico, <strong>done with rigor.</strong></p>
-      <button class="cta fade" style="--d:500" data-next>Begin <span class="arr" aria-hidden="true">→</span></button>
-    </div>
-  </section>
-
-  <section class="scene s2" data-name="Mission" aria-label="Mission">
-    <div class="bg"><img src="manus-storage/galactic-about-bg_a3e8817b.png" alt=""></div>
-    <div class="frame">
-      <p class="eyebrow fade">Who we are</p>
-      <h2 class="h2 split">Health initiatives built to hold up <em>in the real world.</em></h2>
-      <p class="lede fade" style="--d:400">ePAC, LLC is a Puerto Rico company that builds and backs community health, pharmacy and health policy media initiatives, with an <strong>operational and compliance-first</strong> approach.</p>
-    </div>
-  </section>
-
-  <section class="scene s3" data-name="Initiatives" aria-label="Initiatives">
-    <div class="bg"><img src="manus-storage/hero-poster_c4087cb3.jpg" alt=""></div>
-    <div class="frame">
-      <p class="eyebrow fade">Initiatives</p>
-      <h2 class="h2 split">Three fronts, <em>one standard.</em></h2>
-      <div class="grid">
-        <article class="card fade" style="--d:200"><span class="dot" aria-hidden="true"></span><span class="kind">Community pharmacy</span><h3>Súper Farmacia Isla Verde</h3><p>Community pharmacy services and direct patient care.</p></article>
-        <article class="card fade" style="--d:350"><span class="dot" aria-hidden="true"></span><span class="kind">Workplace health</span><h3>Empresa Saludable</h3><p>Health and well-being programs for organizations and their teams.</p></article>
-        <article class="card fade" style="--d:500"><span class="dot" aria-hidden="true"></span><span class="kind">Media · Health policy</span><h3>The Healthcare Paradox</h3><p>Conversation and analysis on the challenges facing the health system.</p></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="scene s4" data-name="Principles" aria-label="Principles">
-    <div class="bg"><video muted loop playsinline preload="metadata" poster="manus-storage/hero-poster_c4087cb3.jpg"><source src="manus-storage/higgsfield-web_9f6a141d.mp4" type="video/mp4"></video></div>
-    <div class="frame">
-      <div>
-        <p class="eyebrow fade">How we work</p>
-        <ul class="values" role="tablist" aria-label="Principles">
-          <li><button role="tab" aria-selected="true" data-v="0">Rigor</button></li>
-          <li><button role="tab" aria-selected="false" data-v="1">Compliance</button></li>
-          <li><button role="tab" aria-selected="false" data-v="2">Community</button></li>
-          <li><button role="tab" aria-selected="false" data-v="3">Durability</button></li>
-        </ul>
-      </div>
-      <div class="value-copy fade" style="--d:300" role="tabpanel" aria-live="polite">
-        <span class="label" id="v-label">Principle 1 of 4</span>
-        <p id="v-text">Decisions grounded in evidence and in operational reality.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="scene s5" data-name="Contact" aria-label="Contact">
-    <div class="bg"><video muted loop playsinline preload="metadata" poster="manus-storage/hero-poster_c4087cb3.jpg"><source src="manus-storage/seedance-web_15a96ec9.mp4" type="video/mp4"></video></div>
-    <div class="frame">
-      <p class="eyebrow fade">Contact</p>
-      <h2 class="giant split">Let’s talk<em>.</em></h2>
-      <p class="lede fade" style="--d:300">For partnerships, press or general inquiries.</p>
-      <div class="row fade" style="--d:500">
-        <span class="label">ePAC, LLC · Puerto Rico · e-pac.ai</span>
-        <button class="cta" data-go="0">Watch again <span class="arr" aria-hidden="true">↺</span></button>
-      </div>
-    </div>
-  </section>
-
 </main>
-
-<footer class="hud hud-bottom">
-  <ol class="chapters" id="chapters"></ol>
-  <span class="label hint" aria-hidden="true">← → · scroll · swipe</span>
-</footer>
-
-<audio id="ambient" src="manus-storage/ambient-space_659e307d.mp3" loop preload="none"></audio>
-
+<footer>© ePAC, LLC · Puerto Rico</footer>
 <script>
-(() => {
-  const root = document.documentElement;
-  const scenes = [...document.querySelectorAll('.scene')];
-  const nav = document.getElementById('chapters');
-  const now = document.getElementById('ch-now');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const HOLD = 9000;            // auto-advance per chapter (ms)
-  const CUT = reduce ? 10 : 1150;
-  let cur = 0, busy = false, t0 = performance.now(), paused = false, userTouched = false;
-
-  // split headings into masked words
-  document.querySelectorAll('.split').forEach(el => {
-    let i = 0;
-    const walk = node => {
-      [...node.childNodes].forEach(n => {
-        if (n.nodeType === 3) {
-          const frag = document.createDocumentFragment();
-          n.textContent.split(/(\s+)/).forEach(tok => {
-            if (!tok) return;
-            if (/^\s+$/.test(tok)) { frag.append(tok); return; }
-            const w = document.createElement('span'); w.className = 'w';
-            const s = document.createElement('span'); s.textContent = tok; s.style.setProperty('--i', i++);
-            w.append(s); frag.append(w);
-          });
-          n.replaceWith(frag);
-        } else if (n.nodeType === 1) {
-          const w = document.createElement('span'); w.className = 'w';
-          const s = document.createElement('span'); s.style.setProperty('--i', i++);
-          n.replaceWith(w); s.append(n); w.append(s);
-        }
-      });
-    };
-    walk(el);
-  });
-
-  // chapter nav
-  scenes.forEach((s, i) => {
-    const li = document.createElement('li');
-    const b = document.createElement('button');
-    b.innerHTML = `<span class="label">${String(i + 1).padStart(2, '0')} <span class="name">${s.dataset.name}</span></span><span class="track"><span class="fill"></span></span>`;
-    b.setAttribute('aria-label', `Chapter ${i + 1}: ${s.dataset.name}`);
-    b.addEventListener('click', () => { userTouched = true; go(i); });
-    li.append(b); nav.append(li);
-  });
-  const navBtns = [...nav.querySelectorAll('button')];
-
-  function playVideos(scene, on) {
-    scene.querySelectorAll('video').forEach(v => {
-      if (on && !reduce) { v.currentTime = 0; const p = v.play(); if (p) p.catch(() => {}); } else v.pause();
-    });
-  }
-
-  function go(i) {
-    i = (i + scenes.length) % scenes.length;
-    if (i === cur || busy) return;
-    busy = true;
-    const prev = scenes[cur], next = scenes[i];
-    prev.classList.add('is-leaving'); prev.classList.remove('is-active');
-    next.classList.add('is-active');
-    playVideos(next, true);
-    cur = i; t0 = performance.now();
-    now.textContent = String(i + 1).padStart(2, '0');
-    navBtns.forEach((b, k) => { b.toggleAttribute('aria-current', false); b.classList.toggle('done', k < i); });
-    navBtns[i].setAttribute('aria-current', 'step');
-    if (i === 3) setValue(0);
-    setTimeout(() => { prev.classList.remove('is-leaving'); playVideos(prev, false); busy = false; }, CUT);
-  }
-  navBtns[0].setAttribute('aria-current', 'step');
-
-  // controls
-  document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => { userTouched = true; go(cur + 1); }));
-  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { userTouched = true; go(+b.dataset.go); }));
-  let wheelAcc = 0, wheelT = 0;
-  addEventListener('wheel', e => {
-    e.preventDefault();
-    const tnow = performance.now();
-    if (tnow - wheelT > 250) wheelAcc = 0;
-    wheelT = tnow; wheelAcc += e.deltaY + e.deltaX;
-    if (Math.abs(wheelAcc) > 60 && !busy) { userTouched = true; go(cur + Math.sign(wheelAcc)); wheelAcc = 0; }
-  }, { passive: false });
-  addEventListener('keydown', e => {
-    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key) && e.target === document.body) { e.preventDefault(); userTouched = true; go(cur + 1); }
-    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); userTouched = true; go(cur - 1); }
-    else if (e.key === 'Home') { userTouched = true; go(0); }
-  });
-  let tx = 0, ty = 0;
-  addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
-  addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
-    const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
-    if (Math.abs(d) > 45) { userTouched = true; go(cur + (d < 0 ? 1 : -1)); }
-  }, { passive: true });
-  document.addEventListener('visibilitychange', () => { paused = document.hidden; if (!paused) t0 = performance.now(); });
-
-  // principles
-  const values = [
-    'Decisions grounded in evidence and in operational reality.',
-    'Full adherence to the regulatory frameworks behind each initiative.',
-    'Patients and the people of Puerto Rico at the center.',
-    'Quality solutions, designed to scale and to last.'
-  ];
-  const vBtns = [...document.querySelectorAll('.values button')];
-  const vText = document.getElementById('v-text'), vLabel = document.getElementById('v-label');
-  let vCur = 0, vT = performance.now();
-  function setValue(k) {
-    vCur = k; vT = performance.now();
-    vBtns.forEach((b, j) => b.setAttribute('aria-selected', j === k ? 'true' : 'false'));
-    vText.textContent = values[k]; vLabel.textContent = `Principle ${k + 1} of 4`;
-  }
-  vBtns.forEach((b, j) => b.addEventListener('click', () => { userTouched = true; setValue(j); }));
-
-  // autoplay loop: chapter timer + principle cycling
-  function tick(t) {
-    if (!paused && !reduce) {
-      const p = Math.min(1, (t - t0) / HOLD);
-      navBtns[cur].style.setProperty('--p', p.toFixed(3));
-      if (cur === 3 && t - vT > HOLD / 4.2 && vCur < 3) setValue(vCur + 1);
-      if (p >= 1 && !busy && cur < scenes.length - 1) go(cur + 1);
-    }
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-
-  // cursor glow
-  const glow = document.querySelector('.glow');
-  addEventListener('pointermove', e => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; }, { passive: true });
-
-  // sound
-  const audio = document.getElementById('ambient'), sb = document.getElementById('sound'), sl = document.getElementById('sound-label');
-  sb.addEventListener('click', () => {
-    const on = sb.getAttribute('aria-pressed') !== 'true';
-    sb.setAttribute('aria-pressed', on);
-    sl.textContent = on ? 'Sound on' : 'Sound';
-    if (on) { audio.volume = .5; const p = audio.play(); if (p) p.catch(() => { sb.setAttribute('aria-pressed', 'false'); sl.textContent = 'Sound'; }); }
-    else audio.pause();
-  });
-
-  // open the curtain
-  requestAnimationFrame(() => setTimeout(() => { root.classList.add('is-open'); t0 = performance.now(); }, reduce ? 0 : 900));
-})();
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelector('.film').pause();
 </script>
-
 </body>
 </html>
