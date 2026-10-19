@@ -44,11 +44,12 @@ h1 {
   font-size: clamp(5.5rem, 26vw, 17rem); line-height: .9; letter-spacing: -.02em;
   opacity: 0; animation: rise 1.8s cubic-bezier(.2,.7,.2,1) .3s forwards;
 }
-h1 span, p i { color: var(--accent); }
+p i { color: var(--accent); }
+.logo { display: block; width: clamp(240px, 62vw, 400px); height: auto; margin: 0 auto; mix-blend-mode: screen; }
 p i { font-style: normal; }
 p b { font-weight: 400; white-space: nowrap; }
 p {
-  margin: 1.4rem 0 0; color: var(--mist); font-size: clamp(.8rem, 2.6vw, 1rem);
+  margin: .4rem 0 0; color: var(--mist); font-size: clamp(.8rem, 2.6vw, 1rem);
   letter-spacing: .32em; text-transform: uppercase;
   opacity: 0; animation: rise 1.6s cubic-bezier(.2,.7,.2,1) 1.1s forwards;
 }
@@ -69,7 +70,7 @@ footer {
 <div class="shade"></div>
 <main>
   <div>
-    <h1>ePAC<span>.</span></h1>
+    <h1><img class="logo" src="/brand/ep-logo-black.png" alt="ePAC" width="500" height="500"></h1>
     <p><b>Healthcare</b> <i>·</i> <b>Policy</b> <i>·</i> <b>Government Affairs</b></p>
   </div>
 </main>
